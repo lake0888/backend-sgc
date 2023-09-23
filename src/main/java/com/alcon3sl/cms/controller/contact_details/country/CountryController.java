@@ -23,6 +23,10 @@ public class CountryController {
         this.countryService = countryService;
     }
 
+    @GetMapping(path = "numberofelements")
+    public ResponseEntity<Long> numberOfElements() {
+        return new ResponseEntity<>(countryService.numberOfElements(), HttpStatus.OK);
+    }
     @GetMapping
     public ResponseEntity<Page<Country>> findAll(
             @RequestParam Optional<String> filter,

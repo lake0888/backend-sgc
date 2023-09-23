@@ -10,10 +10,8 @@ import java.util.List;
 
 @Repository
 public interface ContactDetailsRepository extends JpaRepository<ContactDetails, Long> {
-
     @Query(value = "SELECT * FROM contact_details c WHERE c.id IN (?1)", nativeQuery = true)
     List<ContactDetails> findAllByListId(List<Long> listId);
-
     @Modifying
     @Query(value = "DELETE FROM contact_details c WHERE c.id IN (?1)", nativeQuery = true)
     void deleteAllByListId(List<Long> listId);

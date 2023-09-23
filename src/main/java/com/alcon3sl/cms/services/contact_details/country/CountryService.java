@@ -22,6 +22,10 @@ public class CountryService {
         this.countryRepository = countryRepository;
     }
 
+    public Long numberOfElements() {
+        return countryRepository.numberOfElements();
+    }
+
     public Page<Country> findAll(String filter, PageRequest pageRequest) {
         if (filter.isEmpty())
             return countryRepository.findAll(pageRequest);

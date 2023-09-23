@@ -54,8 +54,6 @@ public class CountryStateService {
                 countryState.getCountry().getName().isEmpty();
         if (flag)
             throw new CountryStateException("Wrong data");
-        if (!countryStateRepository.findByName(countryState.getName().trim().toUpperCase()).isEmpty())
-            throw new CountryStateException("The name already exists");
         return countryStateRepository.save(countryState);
     }
 
@@ -70,10 +68,7 @@ public class CountryStateService {
 
         String name = tempData.getName();
         if (name != null && !name.isEmpty() && !Objects.equals(countryState.getName(), name)) {
-            if (!countryStateRepository.findByName(name.trim().toUpperCase()).isEmpty())
-                throw new CountryStateException("The name already exists");
-            else
-                countryState.setName(name);
+            countryState.setName(name);
         }
 
         Country country = tempData.getCountry();

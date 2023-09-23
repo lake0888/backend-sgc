@@ -24,6 +24,6 @@ public interface CountryStateRepository extends JpaRepository<CountryState, Long
     List<CountryState> findAllByListId(List<Long> listId);
 
     @Modifying
-    @Query(value = "DELETE FROM country_state c WHERE c.ic IN (?1)", nativeQuery = true)
+    @Query(value = "DELETE FROM country_state c WHERE c.id IN (?1)", nativeQuery = true)
     void deleteAllByListId(List<Long> listId);
 }

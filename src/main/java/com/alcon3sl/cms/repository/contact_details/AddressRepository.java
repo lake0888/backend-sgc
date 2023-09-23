@@ -10,10 +10,8 @@ import java.util.List;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
-
     @Query(value = "SELECT * FROM address a WHERE a.id IN (?1)", nativeQuery = true)
     List<Address> findAllByListId(List<Long> listId);
-
     @Modifying
     @Query(value = "DELETE FROM address a WHERE a.id IN (?1)", nativeQuery = true)
     void deleteAllByListId(List<Long> listId);

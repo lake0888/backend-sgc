@@ -109,7 +109,7 @@ public class Importer {
         return "Importer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + "\'" +
+                ", description='" + description + '\'' +
                 ", nit='" + nit + '\'' +
                 ", address=" + address + '\'' +
                 ", contactDetails=" + contactDetails +
