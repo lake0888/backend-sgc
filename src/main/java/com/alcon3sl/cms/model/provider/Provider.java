@@ -1,7 +1,7 @@
 package com.alcon3sl.cms.model.provider;
 
-import com.alcon3sl.cms.model.contact_details.address.Address;
-import com.alcon3sl.cms.model.contact_details.contact_details.ContactDetails;
+import com.alcon3sl.cms.model.util.address.Address;
+import com.alcon3sl.cms.model.util.contact_details.ContactDetails;
 import jakarta.persistence.*;
 
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package com.alcon3sl.cms.controller.provider;
 
 import com.alcon3sl.cms.model.provider.Provider;
-import com.alcon3sl.cms.services.provider.ProviderService;
+import com.alcon3sl.cms.services.provider.DbProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +16,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "provider")
 public class ProviderController {
-    private final ProviderService providerService;
+    private final DbProviderService providerService;
 
     @Autowired
-    public ProviderController(ProviderService providerService) {
+    public ProviderController(DbProviderService providerService) {
         this.providerService = providerService;
     }
 

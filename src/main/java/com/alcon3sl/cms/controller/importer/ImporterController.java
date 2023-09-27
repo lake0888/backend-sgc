@@ -1,7 +1,8 @@
 package com.alcon3sl.cms.controller.importer;
 
 import com.alcon3sl.cms.model.importer.Importer;
-import com.alcon3sl.cms.services.importer.ImporterService;
+import com.alcon3sl.cms.services.util.address.DbAddressService;
+import com.alcon3sl.cms.services.importer.DbImporterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,10 +18,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "importer")
 public class ImporterController {
-    private final ImporterService importerService;
+    private final DbImporterService importerService;
+
+    private final DbAddressService addressService;
     @Autowired
-    public ImporterController(ImporterService importerService) {
+    public ImporterController(DbImporterService importerService, DbAddressService addressService) {
         this.importerService = importerService;
+        this.addressService = addressService;
     }
 
     @GetMapping

@@ -1,7 +1,7 @@
 package com.alcon3sl.cms.controller.carrier;
 
 import com.alcon3sl.cms.model.carrier.Carrier;
-import com.alcon3sl.cms.services.carrier.CarrierService;
+import com.alcon3sl.cms.services.carrier.DbCarrierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +17,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "carrier")
 public class CarrierController {
-    private final CarrierService carrierService;
+    private final DbCarrierService carrierService;
     @Autowired
-    public CarrierController(CarrierService carrierService) {
+    public CarrierController(DbCarrierService carrierService) {
         this.carrierService = carrierService;
     }
 

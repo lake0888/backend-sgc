@@ -2,11 +2,11 @@ package com.alcon3sl.cms.model.article.family;
 
 import com.alcon3sl.cms.model.article.specialty.Specialty;
 import com.alcon3sl.cms.model.article.subfamily.SubFamily;
+import com.alcon3sl.cms.model.util.image.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,8 +23,9 @@ public class Family {
     @Column(nullable = false)
     private String code;
 
-    @JsonIgnore
-    private byte[] image;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
 
     @ManyToOne
     @JoinColumn(name = "specialty_id", referencedColumnName = "id")
@@ -35,13 +36,13 @@ public class Family {
     private List<SubFamily> subfamilies;
 
     public Family() {
-        this("", "", "", new byte[0], new Specialty(), new ArrayList<>());
+        this("", "", "", new Image(), new Specialty(), new ArrayList<>());
     }
-    public Family(String name, String description, String code, byte[] image, Specialty specialty, List<SubFamily> subfamilies) {
+    public Family(String name, String description, String code, Image image, Specialty specialty, List<SubFamily> subfamilies) {
         this(0L, name, description, code, image, specialty, subfamilies);
     }
 
-    public Family(Long id, String name, String description, String code, byte[] image,
+    public Family(Long id, String name, String description, String code, Image image,
                   Specialty specialty, List<SubFamily> subfamilies) {
         this.id = id;
         this.name = name;
@@ -84,11 +85,11 @@ public class Family {
         this.code = code;
     }
 
-    public byte[] getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -109,14 +110,14 @@ public class Family {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Family family = (Family) o;
-        return Objects.equals(id, family.id) && Objects.equals(name, family.name) && Objects.equals(description, family.description) && Objects.equals(code, family.code) && Arrays.equals(image, family.image) && Objects.equals(specialty, family.specialty) && Objects.equals(subfamilies, family.subfamilies);
+        return Objects.equals(id, family.id) && Objects.equals(name, family.name) && Objects.equals(description, family.description) &&
+                Objects.equals(code, family.code) && Objects.equals(image, family.image) &&
+                Objects.equals(specialty, family.specialty) && Objects.equals(subfamilies, family.subfamilies);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, description, code, specialty, subfamilies);
-        result = 31 * result + Arrays.hashCode(image);
-        return result;
+        return Objects.hash(id, name, description, code, image, specialty, subfamilies);
     }
 
     @Override
@@ -126,7 +127,7 @@ public class Family {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", code='" + code + '\'' +
-                ", image=" + Arrays.toString(image) +
+                ", image=" + image +
                 ", specialty=" + specialty +
                 ", subfamilies=" + subfamilies +
                 '}';

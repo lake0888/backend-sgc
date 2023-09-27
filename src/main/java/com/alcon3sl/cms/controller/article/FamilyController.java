@@ -1,7 +1,7 @@
 package com.alcon3sl.cms.controller.article;
 
 import com.alcon3sl.cms.model.article.family.Family;
-import com.alcon3sl.cms.services.article.FamilyService;
+import com.alcon3sl.cms.services.article.family.DbFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,10 +17,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "family")
 public class FamilyController {
-    private final FamilyService familyService;
+    private final DbFamilyService familyService;
 
     @Autowired
-    public FamilyController(FamilyService familyService) {
+    public FamilyController(DbFamilyService familyService) {
         this.familyService = familyService;
     }
 

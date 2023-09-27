@@ -1,11 +1,11 @@
 package com.alcon3sl.cms.model.article.specialty;
 
 import com.alcon3sl.cms.model.article.family.Family;
+import com.alcon3sl.cms.model.util.image.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,21 +21,21 @@ public class Specialty {
     private String description;
     @Column(nullable = false)
     private String code;
-
-    @JsonIgnore
-    private byte[] image;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
     @JsonIgnore
     @OneToMany(mappedBy = "specialty", cascade = CascadeType.REMOVE)
     private List<Family> families;
     public Specialty() {
-        this("", "", "", new byte[0], new ArrayList<>());
+        this("", "", "", new Image(), new ArrayList<>());
     }
     public Specialty(String name, String description, String code,
-                     byte[] image, List<Family> families) {
+                     Image image, List<Family> families) {
         this(0L, name, description, code, image, families);
     }
     public Specialty(Long id, String name, String description, String code,
-                     byte[] image, List<Family> families) {
+                     Image image, List<Family> families) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,11 +76,11 @@ public class Specialty {
         this.code = code;
     }
 
-    public byte[] getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -95,14 +95,13 @@ public class Specialty {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Specialty specialty = (Specialty) o;
-        return Objects.equals(id, specialty.id) && Objects.equals(name, specialty.name) && Objects.equals(description, specialty.description) && Objects.equals(code, specialty.code) && Arrays.equals(image, specialty.image) && Objects.equals(families, specialty.families);
+        return Objects.equals(id, specialty.id) && Objects.equals(name, specialty.name) && Objects.equals(description, specialty.description) &&
+                Objects.equals(code, specialty.code) && Objects.equals(image, specialty.image) && Objects.equals(families, specialty.families);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, description, code, families);
-        result = 31 * result + Arrays.hashCode(image);
-        return result;
+        return Objects.hash(id, name, description, code, image, families);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class Specialty {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", code='" + code + '\'' +
-                ", image=" + Arrays.toString(image) +
+                ", image=" + image +
                 ", families=" + families +
                 '}';
     }

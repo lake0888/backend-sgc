@@ -1,7 +1,7 @@
 package com.alcon3sl.cms.model.importer;
 
-import com.alcon3sl.cms.model.contact_details.address.Address;
-import com.alcon3sl.cms.model.contact_details.contact_details.ContactDetails;
+import com.alcon3sl.cms.model.util.address.Address;
+import com.alcon3sl.cms.model.util.contact_details.ContactDetails;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -17,10 +17,10 @@ public class Importer {
     private String name;
     private String description;
     private String nit;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true )
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade =  CascadeType.ALL, orphanRemoval = true )
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
     private ContactDetails contactDetails;
 

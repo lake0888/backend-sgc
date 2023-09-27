@@ -10,24 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SubFamilyRepository extends JpaRepository<SubFamily, Long> {
-    /*
-    @Query(name = "SELECT s.id, s.code, s.name, s.description, s.image, s.family_id, " +
-            "f.id as fId, f.code as fCode, f.name as fName, f.description as fDescription, " +
-            "f.image as fImage, f.specialty_id, sp.id as spId, sp.code as spCode, " +
-            "sp.name as spName, sp.description as spDescription, sp.image as spImage" +
-            "FROM subfamily s " +
-            "INNER JOIN family f ON (s.family_id = f.id) " +
-            "INNER JOIN specialty sp ON (f._specialty_id = sp.id) " +
-            "WHERE s.name ~* ?1 OR f.name ~* ?1 OR sp.name ~* ?1", nativeQuery = true)
-    List<SubFamily> findAllByNameOrFamilyOrSpecialty(String filter);
-    */
-/*
-    @Query(value = "SELECT s.id, s.code, s.name, s.description, s.image, s.family_id, " +
-            "f.id as fId, f.code as fCode, f.name as fName, f.description as fDescription, " +
-            "f.image as fImage, f.specialty_id FROM subfamily s " +
-            "INNER JOIN family f ON (s.family_id = f.id) " +
-            "WHERE s.name ~* ?1 OR f.name ~* ?1 ORDER BY s.name ASC, f.name ASC", nativeQuery = true)
-            */
 
     @Query(value = "SELECT s.id, s.code, s.name, s.description, s.image, s.family_id, " +
             "f.id as fId, f.code as fCode, f.name as fName, f.description as fDescription, " +

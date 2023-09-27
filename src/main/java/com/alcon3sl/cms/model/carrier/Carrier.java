@@ -1,6 +1,7 @@
 package com.alcon3sl.cms.model.carrier;
 
-import com.alcon3sl.cms.model.contact_details.contact_details.ContactDetails;
+import com.alcon3sl.cms.model.util.contact_details.ContactDetails;
+import com.alcon3sl.cms.model.util.image.Image;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -11,10 +12,14 @@ public class Carrier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     private String description;
+
     private String cif;
+
     @Convert(converter = KindCarrierConverter.class)
     private KindCarrier kindCarrier;
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -108,7 +113,7 @@ public class Carrier {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cif='" + cif + '\'' +
-                ", kindCarrier=" + kindCarrier +
+                ", kindCarrier=" + kindCarrier + '\'' +
                 ", contactDetails=" + contactDetails +
                 '}';
     }
