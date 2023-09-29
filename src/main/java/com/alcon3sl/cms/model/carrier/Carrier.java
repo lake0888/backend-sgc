@@ -1,5 +1,6 @@
 package com.alcon3sl.cms.model.carrier;
 
+import com.alcon3sl.cms.model.util.address.Address;
 import com.alcon3sl.cms.model.util.contact_details.ContactDetails;
 import com.alcon3sl.cms.model.util.image.Image;
 import jakarta.persistence.*;
@@ -22,23 +23,28 @@ public class Carrier {
 
     @Convert(converter = KindCarrierConverter.class)
     private KindCarrier kindCarrier;
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
     private ContactDetails contactDetails;
 
     public Carrier() {
-        this("", "", "", KindCarrier.Multimodal, new ContactDetails());
+        this("", "", "", KindCarrier.Multimodal, new Address(), new ContactDetails());
     }
 
-    public Carrier(String name, String description, String cif, KindCarrier kindCarrier, ContactDetails contactDetails) {
-        this(0L, name, description, cif, kindCarrier, contactDetails);
+    public Carrier(String name, String description, String cif, KindCarrier kindCarrier, Address address, ContactDetails contactDetails) {
+        this(0L, name, description, cif, kindCarrier, address, contactDetails);
     }
-    public Carrier(Long id, String name, String description, String cif, KindCarrier kindCarrier, ContactDetails contactDetails) {
+    public Carrier(Long id, String name, String description, String cif, KindCarrier kindCarrier, Address address, ContactDetails contactDetails) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.cif = cif;
         this.kindCarrier = kindCarrier;
+        this.address = address;
         this.contactDetails = contactDetails;
     }
 
@@ -82,6 +88,14 @@ public class Carrier {
         this.kindCarrier = kindCarrier;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public ContactDetails getContactDetails() {
         return contactDetails;
     }
@@ -98,12 +112,13 @@ public class Carrier {
         return Objects.equals(id, carrier.id) && Objects.equals(name, carrier.name) &&
                 Objects.equals(description, carrier.description) &&
                 Objects.equals(cif, carrier.cif) && kindCarrier == carrier.kindCarrier &&
+                Objects.equals(address, carrier.address) &&
                 Objects.equals(contactDetails, carrier.contactDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, cif, kindCarrier, contactDetails);
+        return Objects.hash(id, name, description, cif, kindCarrier, address, contactDetails);
     }
 
     @Override
@@ -114,6 +129,7 @@ public class Carrier {
                 ", description='" + description + '\'' +
                 ", cif='" + cif + '\'' +
                 ", kindCarrier=" + kindCarrier + '\'' +
+                ", address='" + address + '\'' +
                 ", contactDetails=" + contactDetails +
                 '}';
     }

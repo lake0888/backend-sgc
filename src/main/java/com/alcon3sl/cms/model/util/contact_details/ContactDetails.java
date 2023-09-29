@@ -15,7 +15,6 @@ public class ContactDetails {
     private String cell_phone;
     private String email;
     private String website;
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;

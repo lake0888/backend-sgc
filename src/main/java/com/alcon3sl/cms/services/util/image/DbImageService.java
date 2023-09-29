@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class DbImageService implements ImageService {
     private final ImageRepository imageRepository;
@@ -26,7 +30,26 @@ public class DbImageService implements ImageService {
     public Image save(MultipartFile file) throws Exception {
         if (imageRepository.existsByFilename(file.getOriginalFilename()))
             return this.getImage(file.getOriginalFilename());
-        Image image = new Image(file.getOriginalFilename(), file.getContentType(), file.getBytes());
-        return imageRepository.save(image);
+        return imageRepository.save(this.newImage(file));
+    }
+
+    @Override
+    public Iterable<Image> saveAll(List<MultipartFile> files) {
+        var images = files.stream()
+                .filter(file -> !imageRepository.existsByFilename(file.getOriginalFilename()))
+                .map(this::newImage)
+                .collect(Collectors.toList());
+        return imageRepository.saveAll(images);
+    }
+
+    private Image newImage(MultipartFile file) {
+        try {
+            return new Image(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

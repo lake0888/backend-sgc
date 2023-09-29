@@ -1,15 +1,19 @@
 package com.alcon3sl.cms.controller.carrier;
 
 import com.alcon3sl.cms.model.carrier.Carrier;
+import com.alcon3sl.cms.model.util.image.Image;
 import com.alcon3sl.cms.services.carrier.DbCarrierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +49,16 @@ public class CarrierController {
         return new ResponseEntity<>(carrierService.findById(carrierId), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Carrier> save(@RequestBody Carrier carrier) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Carrier> save(
+            @RequestPart(name = "carrier") Carrier carrier,
+            @RequestPart(name = "imageFile") MultipartFile imageFile) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        carrier.getContactDetails().setImage(image);
         return new ResponseEntity<>(carrierService.save(carrier), HttpStatus.CREATED);
     }
 
@@ -55,10 +67,17 @@ public class CarrierController {
         return new ResponseEntity<>(carrierService.deleteById(carrierId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "{carrierId}")
+    @PutMapping(path = "{carrierId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Carrier> updateById(
             @PathVariable(name = "carrierId") Long carrierId,
-            @RequestBody Carrier tempData) {
+            @RequestPart(name = "carrier") Carrier tempData,
+            @RequestPart(name = "imageFile") MultipartFile imageFile) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        tempData.getContactDetails().setImage(image);
         return new ResponseEntity<>(carrierService.updateById(carrierId, tempData), HttpStatus.OK);
     }
 
