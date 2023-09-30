@@ -77,15 +77,10 @@ public class DbContactDetailService implements ContactDetailService {
     }
 
     @Override
-    public List<ContactDetails> findAllByListId(List<Long> listId) {
-        return contactDetailsRepository.findAllByListId(listId);
-    }
-
-    @Override
     @Transactional
-    public List<ContactDetails> deleteAllByListId(List<Long> listId) {
-        var contactDetailsList = this.findAllByListId(listId);
-        contactDetailsRepository.deleteAllByListId(listId);
+    public List<ContactDetails> deleteAllById(List<Long> listId) {
+        var contactDetailsList = contactDetailsRepository.findAllById(listId);
+        contactDetailsRepository.deleteAllById(listId);
         return contactDetailsList;
     }
 }

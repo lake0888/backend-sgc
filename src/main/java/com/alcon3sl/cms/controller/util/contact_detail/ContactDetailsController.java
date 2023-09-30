@@ -51,21 +51,11 @@ public class ContactDetailsController {
         return new ResponseEntity<>(contactDetailsService.updateById(contactDetailsId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<ContactDetails>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-            ) {
-        var contactDetailsList = contactDetailsService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (contactDetailsList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(contactDetailsList, HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<ContactDetails>> deleteAllByListId(
+    public ResponseEntity<List<ContactDetails>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var contactDetailsList = contactDetailsService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var contactDetailsList = contactDetailsService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (contactDetailsList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(contactDetailsList, HttpStatus.OK);

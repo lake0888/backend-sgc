@@ -16,8 +16,5 @@ public interface ContactDetailService {
 
     ContactDetails updateById(Long contactDetailsId, ContactDetails tempData);
 
-    List<ContactDetails> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<ContactDetails> deleteAllByListId(List<Long> listId);
+    List<ContactDetails> deleteAllById(List<Long> listId);
 }

@@ -16,14 +16,10 @@ public class Carrier {
 
     @Column(nullable = false)
     private String name;
-
     private String description;
-
     private String cif;
-
     @Convert(converter = KindCarrierConverter.class)
     private KindCarrier kindCarrier;
-
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;

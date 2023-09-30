@@ -18,8 +18,5 @@ public interface CountryStateService {
 
     CountryState updateById(Long countryStateId, CountryState tempData);
 
-    List<CountryState> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<CountryState> deleteAllByListId(List<Long> listId);
+    List<CountryState> deleteAllById(List<Long> listId);
 }

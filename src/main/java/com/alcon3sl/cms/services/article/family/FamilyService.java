@@ -14,7 +14,5 @@ public interface FamilyService {
     Family deleteById(Long familyId);
     Family updateById(Long familyId, Family tempData);
     List<Family> findAllBySpecialtyId(Long specialtyId);
-    List<Family> findAllByListId(List<Long> listId);
-    @Transactional
-    List<Family> deleteAllByListId(List<Long> listId);
+    List<Family> deleteAllById(List<Long> listId);
 }

@@ -25,11 +25,4 @@ public interface FamilyRepository extends JpaRepository<Family, Long> {
 
     @Query(value = "SELECT * FROM family f WHERE f.specialty_id = ?1 ORDER BY f.name ASC", nativeQuery = true)
     List<Family> findAllBySpecialtyId(Long specialtyId);
-
-    @Query(value = "SELECT * FROM family f WHERE f.id IN (?1)", nativeQuery = true)
-    List<Family> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM family f WHERE f.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

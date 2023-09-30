@@ -27,11 +27,4 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
     @Query(value = "SELECT * FROM country c WHERE UPPER(c.phone_code) = ?1", nativeQuery = true)
     List<Country> findByPhoneCode(String phoneCode);
-
-    @Query(value = "SELECT * FROM country c WHERE c.id IN (?1)", nativeQuery = true)
-    List<Country> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM country c WHERE c.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

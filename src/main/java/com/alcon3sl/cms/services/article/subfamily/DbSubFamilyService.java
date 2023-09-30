@@ -108,15 +108,9 @@ public class DbSubFamilyService implements SubFamilyService {
     }
 
     @Override
-    public List<SubFamily> findAllByListId(List<Long> listId) {
-        return subFamilyRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<SubFamily> deleteAllByListId(List<Long> listId) {
-        var subfamilyList = findAllByListId(listId);
-        subFamilyRepository.deleteAllByListId(listId);
+    public List<SubFamily> deleteAllById(List<Long> listId) {
+        var subfamilyList = subFamilyRepository.findAllById(listId);
+        subFamilyRepository.deleteAllById(listId);
         return subfamilyList;
     }
 }

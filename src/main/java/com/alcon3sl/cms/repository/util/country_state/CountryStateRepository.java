@@ -22,11 +22,4 @@ public interface CountryStateRepository extends JpaRepository<CountryState, Long
 
     @Query(value = "SELECT * FROM country_state c WHERE UPPER(c.name) = ?1", nativeQuery = true)
     List<CountryState> findByName(String name);
-
-    @Query(value = "SELECT * FROM country_state c WHERE c.id IN (?1)", nativeQuery = true)
-    List<CountryState> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM country_state c WHERE c.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

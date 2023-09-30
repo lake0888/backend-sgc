@@ -1,15 +1,19 @@
 package com.alcon3sl.cms.controller.article;
 
 import com.alcon3sl.cms.model.article.family.Family;
+import com.alcon3sl.cms.model.util.image.Image;
 import com.alcon3sl.cms.services.article.family.DbFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +52,16 @@ public class FamilyController {
         return new ResponseEntity<>(familyService.findById(familyId), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Family> save(@RequestBody Family family) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Family> save(
+            @RequestPart(name = "family") Family family,
+            @RequestPart(name = "imageFile") MultipartFile imageFile) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        family.setImage(image);
         return new ResponseEntity<>(familyService.save(family), HttpStatus.CREATED);
     }
 
@@ -58,11 +70,18 @@ public class FamilyController {
         return new ResponseEntity<>(familyService.deleteById(familyId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "{familyId}")
+    @PutMapping(path = "{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Family> updateById(
             @PathVariable("familyId") Long familyId,
-            @RequestBody Family tempData
-    ) {
+            @RequestPart(name = "family") Family tempData,
+            @RequestPart(name = "imageFile") MultipartFile imageFile
+    ) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        tempData.setImage(image);
         return new ResponseEntity<>(familyService.updateById(familyId, tempData), HttpStatus.OK);
     }
 
@@ -76,20 +95,11 @@ public class FamilyController {
         return new ResponseEntity<List<Family>>(familyList, HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Family>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-    ) {
-        var familyList = familyService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (familyList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(familyList, HttpStatus.OK);
-    }
-    @DeleteMapping(path = "deleteAllByListId")
+    @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Family>> deleteAllByListId(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var familyList = familyService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var familyList = familyService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (familyList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(familyList, HttpStatus.OK);

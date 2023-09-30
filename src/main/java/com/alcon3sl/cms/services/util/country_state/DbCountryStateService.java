@@ -84,15 +84,9 @@ public class DbCountryStateService implements CountryStateService {
     }
 
     @Override
-    public List<CountryState> findAllByListId(List<Long> listId) {
-        return countryStateRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<CountryState> deleteAllByListId(List<Long> listId) {
-        var countryStateList = this.findAllByListId(listId);
-        countryStateRepository.deleteAllByListId(listId);
+    public List<CountryState> deleteAllById(List<Long> listId) {
+        var countryStateList = countryStateRepository.findAllById(listId);
+        countryStateRepository.deleteAllById(listId);
         return countryStateList;
     }
 

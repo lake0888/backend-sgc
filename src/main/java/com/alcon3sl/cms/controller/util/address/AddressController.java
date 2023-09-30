@@ -50,19 +50,10 @@ public class AddressController {
         return new ResponseEntity<>(addressService.updateById(addressId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Address>> findAllByListId(
+    @DeleteMapping(path = "deleteAllById")
+    public ResponseEntity<List<Address>> deleteAllById(
             @RequestParam Optional<List<Long>> listId) {
-        var addressList = addressService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (addressList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(addressList, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<Address>> deleteAllByListId(
-            @RequestParam Optional<List<Long>> listId) {
-        var addressList = addressService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var addressList = addressService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (addressList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(addressList, HttpStatus.OK);

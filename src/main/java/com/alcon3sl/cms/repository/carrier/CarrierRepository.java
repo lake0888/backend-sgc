@@ -18,12 +18,4 @@ public interface CarrierRepository extends JpaRepository<Carrier, Long> {
 
     @Query(value = "SELECT * FROM carrier c WHERE UPPER(c.cif) = ?1", nativeQuery = true)
     List<Carrier> findByCif(String cif);
-
-    @Query(value = "SELECT * FROM carrier c WHERE c.id IN (?1)", nativeQuery = true)
-    List<Carrier> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM carrier c WHERE c.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
-
 }

@@ -73,15 +73,9 @@ public class DbAddressService implements AddressService {
     }
 
     @Override
-    public List<Address> findAllByListId(List<Long> listId) {
-        return addressRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<Address> deleteAllByListId(List<Long> listId) {
-        var addressList = this.findAllByListId(listId);
-        addressRepository.deleteAllByListId(listId);
+    public List<Address> deleteAllById(List<Long> listId) {
+        var addressList = addressRepository.findAllById(listId);
+        addressRepository.deleteAllById(listId);
         return addressList;
     }
 }

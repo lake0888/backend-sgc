@@ -105,15 +105,9 @@ public class DbCarrierService implements CarrierService {
     }
 
     @Override
-    public List<Carrier> findAllByListId(List<Long> listId) {
-        return carrierRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<Carrier> deleteAllByListId(List<Long> listId) {
-        var carrierList = this.findAllByListId(listId);
-        carrierRepository.deleteAllByListId(listId);
+    public List<Carrier> deleteAllById(List<Long> listId) {
+        var carrierList = carrierRepository.findAllById(listId);
+        carrierRepository.deleteAllById(listId);
         return carrierList;
     }
 }

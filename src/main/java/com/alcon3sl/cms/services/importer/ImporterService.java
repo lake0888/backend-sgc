@@ -18,8 +18,5 @@ public interface ImporterService {
 
     Importer updateById(Long importerId, Importer tempData);
 
-    List<Importer> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<Importer> deleteAllByListId(List<Long> listId);
+    List<Importer> deleteAllById(List<Long> listId);
 }

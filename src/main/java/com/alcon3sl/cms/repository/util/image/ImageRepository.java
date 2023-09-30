@@ -1,4 +1,4 @@
-package com.alcon3sl.cms.repository.image;
+package com.alcon3sl.cms.repository.util.image;
 
 import com.alcon3sl.cms.model.util.image.Image;
 import org.springframework.data.jpa.repository.JpaRepository;

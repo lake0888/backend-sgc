@@ -86,15 +86,9 @@ public class DbImporterService implements ImporterService {
     }
 
     @Override
-    public List<Importer> findAllByListId(List<Long> listId) {
-        return importerRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<Importer> deleteAllByListId(List<Long> listId) {
-        var importerList = this.findAllByListId(listId);
-        importerRepository.deleteAllByListId(listId);
+    public List<Importer> deleteAllById(List<Long> listId) {
+        var importerList = importerRepository.findAllById(listId);
+        importerRepository.deleteAllById(listId);
         return importerList;
     }
 }

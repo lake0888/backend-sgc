@@ -18,8 +18,5 @@ public interface SubFamilyService {
 
     SubFamily updateById(Long subfamilyId, SubFamily tempData);
 
-    List<SubFamily> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<SubFamily> deleteAllByListId(List<Long> listId);
+    List<SubFamily> deleteAllById(List<Long> listId);
 }

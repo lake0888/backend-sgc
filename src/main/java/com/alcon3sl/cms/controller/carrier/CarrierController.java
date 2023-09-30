@@ -81,21 +81,11 @@ public class CarrierController {
         return new ResponseEntity<>(carrierService.updateById(carrierId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Carrier>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-    ) {
-        var carrierList = carrierService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (carrierList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(carrierList, HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<Carrier>> deleteAllByListId(
+    public ResponseEntity<List<Carrier>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var carrierList = carrierService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var carrierList = carrierService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (carrierList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(carrierList, HttpStatus.OK);

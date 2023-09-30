@@ -20,11 +20,4 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     @Query(value = "SELECT * FROM provider p WHERE UPPER(p.cif) = ?1", nativeQuery = true)
     List<Provider> findByCif(String cif);
-
-    @Query(value = "SELECT * FROM provider p WHERE p.id IN (?1)", nativeQuery = true)
-    List<Provider> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM provider p WHERE p.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

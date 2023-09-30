@@ -16,8 +16,5 @@ public interface AddressService {
 
     Address updateById(Long addressId, Address tempData);
 
-    List<Address> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<Address> deleteAllByListId(List<Long> listId);
+    List<Address> deleteAllById(List<Long> listId);
 }

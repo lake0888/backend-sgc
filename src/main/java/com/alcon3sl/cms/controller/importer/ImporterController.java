@@ -2,9 +2,7 @@ package com.alcon3sl.cms.controller.importer;
 
 import com.alcon3sl.cms.model.importer.Importer;
 import com.alcon3sl.cms.model.util.image.Image;
-import com.alcon3sl.cms.services.util.address.DbAddressService;
 import com.alcon3sl.cms.services.importer.DbImporterService;
-import com.alcon3sl.cms.services.util.image.DbImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,21 +82,11 @@ public class ImporterController {
         return new ResponseEntity<>(importerService.updateById(importerId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Importer>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-    ) {
-        var importerList = importerService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (importerList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(importerList, HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<Importer>> deleteAllByListId(
+    public ResponseEntity<List<Importer>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var importerList = importerService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var importerList = importerService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (importerList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(importerList, HttpStatus.OK);

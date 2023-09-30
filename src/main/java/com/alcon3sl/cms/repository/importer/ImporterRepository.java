@@ -20,11 +20,4 @@ public interface ImporterRepository extends JpaRepository<Importer, Long> {
     List<Importer> findByName(String name);
     @Query(value = "SELECT * FROM importer i WHERE UPPER(i.nit) = ?1", nativeQuery = true)
     List<Importer> findByNit(String nit);
-
-    @Query(value = "SELECT * FROM importer i WHERE i.id IN (?1)", nativeQuery = true)
-    List<Importer> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM importer i WHERE i.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

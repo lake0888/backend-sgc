@@ -25,11 +25,4 @@ public interface SubFamilyRepository extends JpaRepository<SubFamily, Long> {
     List<SubFamily> findByCode(String code);
     @Query(value = "SELECT * FROM subfamily s WHERE UPPER(s.name) = ?1", nativeQuery = true)
     List<SubFamily> findByName(String name);
-
-    @Query(value = "SELECT * FROM subfamily s WHERE s.id IN (?1)", nativeQuery = true)
-    List<SubFamily> findAllByListId(List<Long> listId);
-
-    @Modifying
-    @Query(value = "DELETE FROM subfamily s WHERE s.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

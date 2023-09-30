@@ -85,14 +85,9 @@ public class DbSpecialtyService implements SpecialtyService{
     }
 
     @Override
-    public List<Specialty> findAllByListId(List<Long> listId) {
-        return specialtyRepository.findAllByListId(listId);
-    }
-    @Override
-    @Transactional
-    public List<Specialty> deleteAllByListId(List<Long> listId) {
-        var specialtyList = findAllByListId(listId);
-        specialtyRepository.deleteAllByListId(listId);
+    public List<Specialty> deleteAllById(List<Long> listId) {
+        var specialtyList = specialtyRepository.findAllById(listId);
+        specialtyRepository.deleteAllById(listId);
         return specialtyList;
     }
 }

@@ -66,21 +66,11 @@ public class CountryController {
         return new ResponseEntity<>(countryService.updateById(countryId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Country>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-    ) {
-        var countryList = countryService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (countryList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(countryList, HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<Country>> deleteAllByListId(
+    public ResponseEntity<List<Country>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var countryList = countryService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var countryList = countryService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (countryList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countryList, HttpStatus.OK);

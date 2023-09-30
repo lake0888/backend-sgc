@@ -19,10 +19,4 @@ public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
 
     @Query(value = "SELECT * FROM SPECIALTY s WHERE UPPER(s.name) = ?1", nativeQuery = true)
     List<Specialty> findByName(String name);
-
-    @Query(value = "SELECT * FROM specialty s WHERE s.id IN (?1)", nativeQuery = true)
-    List<Specialty> findAllByListId(List<Long> listId);
-    @Modifying
-    @Query(value = "DELETE FROM specialty s WHERE s.id IN (?1)", nativeQuery = true)
-    void deleteAllByListId(List<Long> listId);
 }

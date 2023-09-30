@@ -18,8 +18,5 @@ public interface ProviderService {
 
     Provider updateById(Long providerId, Provider tempData);
 
-    List<Provider> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<Provider> deleteAllByListId(List<Long> listId);
+    List<Provider> deleteAllById(List<Long> listId);
 }

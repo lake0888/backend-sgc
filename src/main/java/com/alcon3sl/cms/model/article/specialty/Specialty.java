@@ -21,7 +21,7 @@ public class Specialty {
     private String description;
     @Column(nullable = false)
     private String code;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = { CascadeType.ALL, CascadeType.REMOVE }, orphanRemoval = true)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
     @JsonIgnore

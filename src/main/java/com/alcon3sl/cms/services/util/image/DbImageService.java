@@ -2,7 +2,7 @@ package com.alcon3sl.cms.services.util.image;
 
 import com.alcon3sl.cms.exception.ImageNotFoundException;
 import com.alcon3sl.cms.model.util.image.Image;
-import com.alcon3sl.cms.repository.image.ImageRepository;
+import com.alcon3sl.cms.repository.util.image.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

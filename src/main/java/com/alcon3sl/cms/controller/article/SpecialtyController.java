@@ -1,15 +1,20 @@
 package com.alcon3sl.cms.controller.article;
 
 import com.alcon3sl.cms.model.article.specialty.Specialty;
+import com.alcon3sl.cms.model.util.image.Image;
 import com.alcon3sl.cms.services.article.specialty.DbSpecialtyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +43,7 @@ public class SpecialtyController {
         );
         if (specialties.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<Page<Specialty>>(specialties, HttpStatus.OK);
+        return new ResponseEntity<>(specialties, HttpStatus.OK);
     }
 
     @GetMapping(path = "{specialtyId}")
@@ -47,8 +52,16 @@ public class SpecialtyController {
         return new ResponseEntity<>(specialtyService.findById(specialtyId), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Specialty> save(@RequestBody Specialty specialty) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Specialty> save(
+            @RequestPart("specialty") Specialty specialty,
+            @RequestPart("imageFile") MultipartFile imageFile) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        specialty.setImage(image);
         return new ResponseEntity<>(specialtyService.save(specialty), HttpStatus.CREATED);
     }
     @DeleteMapping(path = "{specialtyId}")
@@ -57,30 +70,27 @@ public class SpecialtyController {
         return new ResponseEntity<>(specialtyService.deleteById(specialtyId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "{specialtyId}")
+    @PutMapping(path = "{specialtyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Specialty> updateById(
             @PathVariable("specialtyId") Long specialtyId,
-            @RequestBody Specialty tempData
-    ) {
+            @RequestPart(name = "specialty") Specialty tempData,
+            @RequestPart(name = "imageFile") MultipartFile imageFile
+    ) throws IOException {
+        Image image = new Image(
+                imageFile.getOriginalFilename(),
+                imageFile.getContentType(),
+                imageFile.getBytes()
+        );
+        tempData.setImage(image);
         return new ResponseEntity<>(
                 specialtyService.updateById(specialtyId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Specialty>> findAllByListId(
-            @RequestParam Optional<List<Long>> listId
-    ) {
-        var specialtyList = specialtyService.findAllByListId(listId.orElse(new ArrayList<>()));
-        if (specialtyList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(specialtyList, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "deleteAllByListId")
+    @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Specialty>> deleteAllByListId(
             @RequestParam Optional<List<Long>> listId
     ) {
-        var specialtyList = specialtyService.deleteAllByListId(listId.orElse(new ArrayList<>()));
+        var specialtyList = specialtyService.deleteAllById(listId.orElse(new ArrayList<>()));
         if (specialtyList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(specialtyList, HttpStatus.OK);

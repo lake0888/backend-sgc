@@ -18,8 +18,5 @@ public interface CarrierService {
 
     Carrier updateById(Long carrierId, Carrier tempData);
 
-    List<Carrier> findAllByListId(List<Long> listId);
-
-    @Transactional
-    List<Carrier> deleteAllByListId(List<Long> listId);
+    List<Carrier> deleteAllById(List<Long> listId);
 }

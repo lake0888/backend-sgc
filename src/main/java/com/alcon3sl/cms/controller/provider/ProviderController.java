@@ -82,17 +82,9 @@ public class ProviderController {
         return new ResponseEntity<>(providerService.updateById(providerId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAllByListId")
-    public ResponseEntity<List<Provider>> findAllByListId(List<Long> listId) {
-        var providerList = providerService.findAllByListId(listId);
-        if (providerList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(providerList, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "deleteAllByListId")
-    public ResponseEntity<List<Provider>> deleteAllByListId(List<Long> listId) {
-        var providerList = providerService.deleteAllByListId(listId);
+    @DeleteMapping(path = "deleteAllById")
+    public ResponseEntity<List<Provider>> deleteAllById(List<Long> listId) {
+        var providerList = providerService.deleteAllById(listId);
         if (providerList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(providerList, HttpStatus.OK);

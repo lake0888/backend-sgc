@@ -13,7 +13,5 @@ public interface SpecialtyService {
     Specialty save(Specialty specialty);
     Specialty deleteById(Long specialtyId);
     Specialty updateById(Long specialtyId, Specialty tempData);
-    List<Specialty> findAllByListId(List<Long> listId);
-    @Transactional
-    List<Specialty> deleteAllByListId(List<Long> lisId);
+    List<Specialty> deleteAllById(List<Long> lisId);
 }

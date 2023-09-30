@@ -91,15 +91,9 @@ public class DbProviderService implements ProviderService {
     }
 
     @Override
-    public List<Provider> findAllByListId(List<Long> listId) {
-        return providerRepository.findAllByListId(listId);
-    }
-
-    @Override
-    @Transactional
-    public List<Provider> deleteAllByListId(List<Long> listId) {
-        var providerList = this.findAllByListId(listId);
-        providerRepository.deleteAllByListId(listId);
+    public List<Provider> deleteAllById(List<Long> listId) {
+        var providerList = providerRepository.findAllById(listId);
+        providerRepository.deleteAllById(listId);
         return providerList;
     }
 }
