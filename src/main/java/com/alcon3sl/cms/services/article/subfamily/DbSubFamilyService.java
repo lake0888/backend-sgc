@@ -58,9 +58,9 @@ public class DbSubFamilyService implements SubFamilyService {
         subfamily.getCode().isEmpty() || subfamily.getFamily().getId() == 0);
         if (flag)
             throw new SubFamilyNotFoundException("Wrong data");
-        if (!subFamilyRepository.findByCode(subfamily.getCode().trim().toUpperCase()).isEmpty())
+        if (!subFamilyRepository.findByCodeIgnoreCase(subfamily.getCode().trim().toUpperCase()).isEmpty())
             throw new SubFamilyNotFoundException("The code already exists");
-        if (!subFamilyRepository.findByName(subfamily.getName().trim().toUpperCase()).isEmpty())
+        if (!subFamilyRepository.findByNameIgnoreCase(subfamily.getName().trim().toUpperCase()).isEmpty())
             throw new SubFamilyNotFoundException("The name already exists");
         return subFamilyRepository.save(subfamily);
     }
@@ -76,9 +76,17 @@ public class DbSubFamilyService implements SubFamilyService {
     public SubFamily updateById(Long subfamilyId, SubFamily tempData) {
         SubFamily subFamily = findById(subfamilyId);
 
+        String code = tempData.getCode();
+        if (code != null && !code.isEmpty() && !Objects.equals(subFamily.getCode(), code)) {
+            if (!subFamilyRepository.findByCodeIgnoreCase(code.trim().toUpperCase()).isEmpty())
+                throw new SubFamilyNotFoundException("The name already exists");
+            else
+                subFamily.setCode(code);
+        }
+
         String name = tempData.getName();
         if (name != null && !name.isEmpty() && !Objects.equals(subFamily.getName(), name)) {
-            if (!subFamilyRepository.findByName(name.trim().toUpperCase()).isEmpty())
+            if (!subFamilyRepository.findByNameIgnoreCase(name.trim().toUpperCase()).isEmpty())
                 throw new SubFamilyNotFoundException("The name already exists");
             else
                 subFamily.setName(name);
@@ -87,14 +95,6 @@ public class DbSubFamilyService implements SubFamilyService {
         String description = tempData.getDescription();
         if (!Objects.equals(subFamily.getDescription(), description))
             subFamily.setDescription(description);
-
-        String code = tempData.getCode();
-        if (code != null && !code.isEmpty() && !Objects.equals(subFamily.getCode(), code)) {
-            if (!subFamilyRepository.findByCode(code.trim().toUpperCase()).isEmpty())
-                throw new SubFamilyNotFoundException("The name already exists");
-            else
-                subFamily.setCode(code);
-        }
 
         Image image = tempData.getImage();
         if (!Objects.equals(subFamily.getImage(), image))

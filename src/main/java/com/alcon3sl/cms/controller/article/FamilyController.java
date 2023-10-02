@@ -85,16 +85,6 @@ public class FamilyController {
         return new ResponseEntity<>(familyService.updateById(familyId, tempData), HttpStatus.OK);
     }
 
-    @GetMapping(path = "familyListBySpecialtyId/{specialtyId}")
-    public ResponseEntity<List<Family>> findAllBySpecialtyId(
-            @PathVariable("specialtyId") Long specialtyId
-    ) {
-        var familyList = familyService.findAllBySpecialtyId(specialtyId);
-        if (familyList.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<List<Family>>(familyList, HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Family>> deleteAllByListId(
             @RequestParam Optional<List<Long>> listId
@@ -103,5 +93,15 @@ public class FamilyController {
         if (familyList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(familyList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "familyListBySpecialty_Id/{specialtyId}")
+    public ResponseEntity<List<Family>> findBySpecialty_Id(
+            @PathVariable("specialtyId") Long specialtyId
+    ) {
+        var familyList = familyService.findBySpecialty_Id(specialtyId);
+        if (familyList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<List<Family>>(familyList, HttpStatus.OK);
     }
 }

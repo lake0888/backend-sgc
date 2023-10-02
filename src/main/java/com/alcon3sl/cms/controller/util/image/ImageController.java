@@ -58,13 +58,20 @@ public class ImageController {
         );
     }
 
-    @GetMapping(path = "{filename}")
-    public ResponseEntity<Resource> retrieve(
-            @PathVariable(name = "filename") String filename,
-            @RequestParam(name = "flag") boolean flag) throws IOException {
-        var image = (flag)
-                ? imageService.getImage(filename)
-                : this.getImageFromServer(filename);
+    @GetMapping(path = "temp/{filename}")
+    public ResponseEntity<Resource> findByFilename(
+            @PathVariable(name = "filename") String filename) throws IOException {
+        var image = this.getImageFromServer(filename);
+        var body = new ByteArrayResource(image.getData());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, image.getMimeType())
+                .body(body);
+    }
+
+    @GetMapping(path = "{imageId}")
+    public ResponseEntity<Resource> findById(@PathVariable(name = "imageId") Long imageId) {
+        var image = imageService.findById(imageId);
         var body = new ByteArrayResource(image.getData());
 
         return ResponseEntity.ok()

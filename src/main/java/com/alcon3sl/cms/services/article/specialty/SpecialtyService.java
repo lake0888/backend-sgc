@@ -6,12 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SpecialtyService {
-    Page<Specialty> findAll(String name, PageRequest pageRequest);
+    List<Specialty> findAll(String name);
     Specialty findById(Long specialtyId);
     Specialty save(Specialty specialty);
     Specialty deleteById(Long specialtyId);
     Specialty updateById(Long specialtyId, Specialty tempData);
     List<Specialty> deleteAllById(List<Long> lisId);
+    List<Specialty> findByFamily_NotNull(String name);
 }

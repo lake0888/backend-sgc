@@ -13,6 +13,7 @@ public interface FamilyService {
     Family save(Family family);
     Family deleteById(Long familyId);
     Family updateById(Long familyId, Family tempData);
-    List<Family> findAllBySpecialtyId(Long specialtyId);
     List<Family> deleteAllById(List<Long> listId);
+
+    List<Family> findBySpecialty_Id(Long specialtyId);
 }

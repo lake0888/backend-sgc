@@ -6,7 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ImageService {
-    Image getImage(String filename);
+    Image findByFilename(String filename);
+
+    Image findById(Long imageId);
 
     Image save(MultipartFile file) throws Exception;
 

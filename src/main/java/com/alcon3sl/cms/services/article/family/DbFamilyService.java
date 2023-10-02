@@ -53,9 +53,9 @@ public class DbFamilyService implements FamilyService {
                 family.getCode().isEmpty() || family.getSpecialty().getId() == 0;
         if (flag)
             throw new FamilyNotFoundException("Wrong data");
-        if (!familyRepository.findByCode(family.getCode().trim().toUpperCase()).isEmpty())
+        if (!familyRepository.findByCodeIgnoreCase(family.getCode().trim().toUpperCase()).isEmpty())
             throw new FamilyNotFoundException("The code already exists");
-        if (!familyRepository.findByName(family.getName().trim().toUpperCase()).isEmpty())
+        if (!familyRepository.findByNameIgnoreCase(family.getName().trim().toUpperCase()).isEmpty())
             throw new FamilyNotFoundException("The name already exists");
         return familyRepository.save(family);
     }
@@ -71,9 +71,17 @@ public class DbFamilyService implements FamilyService {
     public Family updateById(Long familyId, Family tempData) {
         Family family = findById(familyId);
 
+        String code = tempData.getCode();
+        if (code != null && !code.isEmpty() && !Objects.equals(family.getCode(), code)) {
+            if (!familyRepository.findByCodeIgnoreCase(code.trim().toUpperCase()).isEmpty())
+                throw new FamilyNotFoundException("The code already exists");
+            else
+                family.setCode(code);
+        }
+
         String name = tempData.getName();
         if (name != null && !name.isEmpty() && !Objects.equals(family.getName(), name)) {
-            if (!familyRepository.findByName(name.trim().toUpperCase()).isEmpty())
+            if (!familyRepository.findByNameIgnoreCase(name.trim().toUpperCase()).isEmpty())
                 throw new FamilyNotFoundException("The name already exists");
             else
                 family.setName(name);
@@ -82,14 +90,6 @@ public class DbFamilyService implements FamilyService {
         String description = tempData.getDescription();
         if (!Objects.equals(family.getDescription(), description))
             family.setDescription(description);
-
-        String code = tempData.getCode();
-        if (code != null && !code.isEmpty() && !Objects.equals(family.getCode(), code)) {
-            if (!familyRepository.findByCode(code.trim().toUpperCase()).isEmpty())
-                throw new FamilyNotFoundException("The code already exists");
-            else
-                family.setCode(code);
-        }
 
         Image image = tempData.getImage();
         if (!Objects.equals(family.getImage(), image))
@@ -102,16 +102,15 @@ public class DbFamilyService implements FamilyService {
 
         return familyRepository.save(family);
     }
-
-    @Override
-    public List<Family> findAllBySpecialtyId(Long specialtyId) {
-        return familyRepository.findAllBySpecialtyId(specialtyId);
-    }
-
     @Override
     public List<Family> deleteAllById(List<Long> listId) {
         var familyList = familyRepository.findAllById(listId);
         familyRepository.deleteAllById(listId);
         return familyList;
+    }
+
+    @Override
+    public List<Family> findBySpecialty_Id(Long specialtyId) {
+        return familyRepository.findBySpecialty_Id(specialtyId);
     }
 }

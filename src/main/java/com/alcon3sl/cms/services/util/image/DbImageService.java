@@ -21,15 +21,20 @@ public class DbImageService implements ImageService {
     }
 
     @Override
-    public Image getImage(String filename) {
+    public Image findByFilename(String filename) {
         return imageRepository.findByFilename(filename)
+                .orElseThrow(() -> new ImageNotFoundException("Image not found"));
+    }
+
+    public Image findById(Long imageId) {
+        return imageRepository.findById(imageId)
                 .orElseThrow(() -> new ImageNotFoundException("Image not found"));
     }
 
     @Override
     public Image save(MultipartFile file) throws Exception {
         if (imageRepository.existsByFilename(file.getOriginalFilename()))
-            return this.getImage(file.getOriginalFilename());
+            return this.findByFilename(file.getOriginalFilename());
         return imageRepository.save(this.newImage(file));
     }
 

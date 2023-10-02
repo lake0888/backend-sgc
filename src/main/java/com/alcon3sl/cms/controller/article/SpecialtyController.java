@@ -3,6 +3,7 @@ package com.alcon3sl.cms.controller.article;
 import com.alcon3sl.cms.model.article.specialty.Specialty;
 import com.alcon3sl.cms.model.util.image.Image;
 import com.alcon3sl.cms.services.article.specialty.DbSpecialtyService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,7 @@ public class SpecialtyController {
             @RequestParam Optional<Integer> size,
             @RequestParam Optional<String> sortBy
             ) {
-        var specialties = specialtyService.findAll(name.orElse(""),
+        var specialties = specialtyService.convertToPage(name.orElse(""),
                 PageRequest.of(
                         page.orElse(0),
                         size.orElse(50),
@@ -91,6 +92,24 @@ public class SpecialtyController {
             @RequestParam Optional<List<Long>> listId
     ) {
         var specialtyList = specialtyService.deleteAllById(listId.orElse(new ArrayList<>()));
+        if (specialtyList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(specialtyList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = {"findAll/{name}", "findAll"})
+    public ResponseEntity<List<Specialty>> findAll(
+            @PathVariable(name = "name") Optional<String> name
+    ){
+        var specialtyList = specialtyService.findAll(name.orElse(""));
+        return new ResponseEntity<>(specialtyList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "findByFamily_NotNull")
+    public ResponseEntity<List<Specialty>> findByFamily_NotNull(
+            @RequestParam(name = "name") Optional<String> name
+    ) {
+        var specialtyList = specialtyService.findByFamily_NotNull(name.orElse(""));
         if (specialtyList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(specialtyList, HttpStatus.OK);

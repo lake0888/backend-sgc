@@ -11,18 +11,16 @@ import java.util.List;
 @Repository
 public interface FamilyRepository extends JpaRepository<Family, Long> {
 
-    @Query(value = "SELECT f.id, f.code, f.name, f.description, f.image, f.specialty_id, " +
+    @Query(value = "SELECT f.id, f.code, f.name, f.description, f.specialty_id, f.image_id, " +
             "s.id as sId, s.code as sCode, s.name as sName, s.description as sDescription, " +
-            "s.image as sImage FROM family f " +
+            "s.image_id as sImage FROM family f " +
             "INNER JOIN specialty s ON (f.specialty_id = s.id) " +
             "WHERE f.name ~* ?1 OR s.name ~* ?1 ORDER BY f.name ASC, s.name ASC", nativeQuery = true)
     List<Family> findAllByNameOrSpecialty(String filter);
-    @Query(value = "SELECT * FROM family f WHERE UPPER(f.code) = ?1", nativeQuery = true)
-    List<Family> findByCode(String code);
 
-    @Query(value = "SELECT * FROM family f WHERE UPPER(f.name) = ?1", nativeQuery = true)
-    List<Family> findByName(String name);
+    List<Family> findByCodeIgnoreCase(String code);
 
-    @Query(value = "SELECT * FROM family f WHERE f.specialty_id = ?1 ORDER BY f.name ASC", nativeQuery = true)
-    List<Family> findAllBySpecialtyId(Long specialtyId);
+    List<Family> findByNameIgnoreCase(String name);
+
+    List<Family> findBySpecialty_Id(Long specialtyId);
 }

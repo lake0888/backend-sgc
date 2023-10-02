@@ -20,6 +20,5 @@ public interface CountryStateRepository extends JpaRepository<CountryState, Long
     @Query(value = "SELECT * FROM country_state c WHERE UPPER(c.code_country) = ?1", nativeQuery = true)
     List<CountryState> findAllByCountryCode(String code);
 
-    @Query(value = "SELECT * FROM country_state c WHERE UPPER(c.name) = ?1", nativeQuery = true)
     List<CountryState> findByName(String name);
 }

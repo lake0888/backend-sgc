@@ -46,7 +46,9 @@ public class CountryStateController {
     }
 
     @PostMapping
-    public ResponseEntity<CountryState> save(@RequestBody CountryState countryState) {
+    public ResponseEntity<CountryState> save(
+            @RequestPart(name = "countryState") CountryState countryState
+    ) {
         return new ResponseEntity<>(countryStateService.save(countryState), HttpStatus.CREATED);
     }
 
@@ -59,7 +61,7 @@ public class CountryStateController {
     @PutMapping(path = "{countryStateId}")
     public ResponseEntity<CountryState> updateById(
             @PathVariable(name = "countryStateId") Long countryStateId,
-            @RequestBody CountryState countryState
+            @RequestPart(name = "countryState") CountryState countryState
     ) {
         return new ResponseEntity<>(countryStateService.updateById(countryStateId, countryState), HttpStatus.OK);
     }

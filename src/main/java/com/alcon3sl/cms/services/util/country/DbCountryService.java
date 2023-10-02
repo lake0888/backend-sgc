@@ -23,11 +23,6 @@ public class DbCountryService implements CountryService {
     }
 
     @Override
-    public Long numberOfElements() {
-        return countryRepository.numberOfElements();
-    }
-
-    @Override
     public Page<Country> findAll(String filter, PageRequest pageRequest) {
         if (filter.isEmpty())
             return countryRepository.findAll(pageRequest);
@@ -45,13 +40,13 @@ public class DbCountryService implements CountryService {
         boolean flag = country == null || country.getName().isEmpty() || country.getCode().isEmpty();
         if (flag)
             throw new CountryNotFoundException("Wrong data");
-        if (!countryRepository.findByCode(country.getCode().trim().toUpperCase()).isEmpty())
+        if (!countryRepository.findByCodeIgnoreCase(country.getCode().trim().toUpperCase()).isEmpty())
             throw new CountryNotFoundException("The code already exists");
-        if (!countryRepository.findByName(country.getName().trim().toUpperCase()).isEmpty())
+        if (!countryRepository.findByNameIgnoreCase(country.getName().trim().toUpperCase()).isEmpty())
             throw new CountryNotFoundException("The name already exists");
-        if (!countryRepository.findByName(country.getNationality().trim().toUpperCase()).isEmpty())
+        if (!countryRepository.findByNationalityIgnoreCase(country.getNationality().trim().toUpperCase()).isEmpty())
             throw new CountryNotFoundException("The nationality already exists");
-        if (!countryRepository.findByName(country.getPhoneCode().trim().toUpperCase()).isEmpty())
+        if (!countryRepository.findByPhoneCodeIgnoreCase(country.getPhoneCode().trim().toUpperCase()).isEmpty())
             throw new CountryNotFoundException("The phone code already exists");
         return countryRepository.save(country);
     }
@@ -69,7 +64,7 @@ public class DbCountryService implements CountryService {
 
         String code = tempData.getCode();
         if (code != null && !code.isEmpty() && !Objects.equals(country.getCode(), code)) {
-            if (!countryRepository.findByCode(code.trim().toUpperCase()).isEmpty())
+            if (!countryRepository.findByCodeIgnoreCase(code.trim().toUpperCase()).isEmpty())
                 throw new CountryNotFoundException("The code already exists");
             else
                 country.setCode(code);
@@ -77,7 +72,7 @@ public class DbCountryService implements CountryService {
 
         String name = tempData.getName();
         if (name != null && !name.isEmpty() && !Objects.equals(country.getName(), name)) {
-            if (!countryRepository.findByName(name.trim().toUpperCase()).isEmpty())
+            if (!countryRepository.findByNameIgnoreCase(name.trim().toUpperCase()).isEmpty())
                 throw new CountryNotFoundException("The name already exists");
             else
                 country.setName(name);
@@ -85,7 +80,7 @@ public class DbCountryService implements CountryService {
 
         String nationality = tempData.getNationality();
         if (nationality != null && !Objects.equals(country.getNationality(), nationality)) {
-            if (!countryRepository.findByNationality(nationality.trim().toUpperCase()).isEmpty())
+            if (!countryRepository.findByNationalityIgnoreCase(nationality.trim().toUpperCase()).isEmpty())
                 throw new CountryNotFoundException("The nationality already exists");
             else
                 country.setNationality(nationality);
@@ -93,7 +88,7 @@ public class DbCountryService implements CountryService {
 
         String phoneCode = tempData.getPhoneCode();
         if (phoneCode != null && !Objects.equals(country.getPhoneCode(), phoneCode)) {
-            if (!countryRepository.findByPhoneCode(phoneCode.trim().toUpperCase()).isEmpty())
+            if (!countryRepository.findByPhoneCodeIgnoreCase(phoneCode.trim().toUpperCase()).isEmpty())
                 throw new CountryNotFoundException("The phone code already exists");
             else
                 country.setPhoneCode(phoneCode);
@@ -107,5 +102,10 @@ public class DbCountryService implements CountryService {
         var countryList = countryRepository.findAllById(listId);
         countryRepository.deleteAllById(listId);
         return countryList;
+    }
+
+    @Override
+    public List<Country> findAllByName(String name) {
+        return countryRepository.findAllByName(name);
     }
 }

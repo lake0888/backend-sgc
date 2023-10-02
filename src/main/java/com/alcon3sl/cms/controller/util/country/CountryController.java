@@ -23,10 +23,6 @@ public class CountryController {
         this.countryService = countryService;
     }
 
-    @GetMapping(path = "numberofelements")
-    public ResponseEntity<Long> numberOfElements() {
-        return new ResponseEntity<>(countryService.numberOfElements(), HttpStatus.OK);
-    }
     @GetMapping
     public ResponseEntity<Page<Country>> findAll(
             @RequestParam Optional<String> filter,
@@ -49,7 +45,7 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<Country> save(@RequestBody Country country) {
+    public ResponseEntity<Country> save(@RequestPart(name = "country") Country country) {
         return new ResponseEntity<>(countryService.save(country), HttpStatus.CREATED);
     }
 
@@ -61,16 +57,26 @@ public class CountryController {
     @PutMapping(path = "{countryId}")
     public ResponseEntity<Country> updateById(
             @PathVariable(name = "countryId") Long countryId,
-            @RequestBody Country tempData
+            @RequestPart(name = "country") Country tempData
     ) {
         return new ResponseEntity<>(countryService.updateById(countryId, tempData), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "deleteAllByListId")
+    @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Country>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {
         var countryList = countryService.deleteAllById(listId.orElse(new ArrayList<>()));
+        if (countryList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(countryList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "findAll/{name}")
+    public ResponseEntity<List<Country>> findAllNyName(
+            @PathVariable(name = "name") String name
+    ) {
+        var countryList = countryService.findAllByName(name);
         if (countryList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countryList, HttpStatus.OK);

@@ -9,14 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
-    @Query(value = "SELECT * FROM SPECIALTY s WHERE s.name ~* ?1 ORDER BY s.name ASC", nativeQuery = true)
-    Page<Specialty> findAllByName(String name, PageRequest id);
-    @Query(value = "SELECT * FROM SPECIALTY s WHERE UPPER(s.code) = ?1", nativeQuery = true)
-    List<Specialty> findByCode(String code);
+    @Query(value = "SELECT * FROM specialty s WHERE s.name ~* ?1 ORDER BY s.name", nativeQuery = true)
+    Optional<List<Specialty>> findAll(String name);
 
-    @Query(value = "SELECT * FROM SPECIALTY s WHERE UPPER(s.name) = ?1", nativeQuery = true)
-    List<Specialty> findByName(String name);
+    List<Specialty> findByCodeIgnoreCase(String code);
+
+    List<Specialty> findByNameIgnoreCase(String name);
+
+    List<Specialty> findByFamilies_NotNull();
 }
