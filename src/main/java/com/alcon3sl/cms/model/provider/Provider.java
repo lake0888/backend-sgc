@@ -16,9 +16,9 @@ public class Provider {
     private String name;
     private String description;
     private String cif;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
     private ContactDetails contactDetails;
 

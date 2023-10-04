@@ -19,4 +19,6 @@ public interface CarrierService {
     Carrier updateById(Long carrierId, Carrier tempData);
 
     List<Carrier> deleteAllById(List<Long> listId);
+
+    List<Carrier> findByNameOrderByName(String name);
 }

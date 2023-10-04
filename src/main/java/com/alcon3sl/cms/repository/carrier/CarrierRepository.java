@@ -10,12 +10,12 @@ import java.util.List;
 
 @Repository
 public interface CarrierRepository extends JpaRepository<Carrier, Long> {
-    @Query(value = "SELECT * FROM carrier c WHERE c.name ~* ?1 OR c.description ~* ?1 OR c.kind_carrier ~* ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM carrier c WHERE c.name ~* ?1 OR c.kind_carrier ~* ?1", nativeQuery = true)
     List<Carrier> findAllByNameOrKindCarrier(String filter);
 
-    @Query(value = "SELECT * FROM carrier c WHERE UPPER(c.name) = ?1", nativeQuery = true)
-    List<Carrier> findByName(String name);
+    List<Carrier> findByNameIgnoreCase(String name);
 
-    @Query(value = "SELECT * FROM carrier c WHERE UPPER(c.cif) = ?1", nativeQuery = true)
-    List<Carrier> findByCif(String cif);
+    List<Carrier> findByCifIgnoreCase(String cif);
+
+    List<Carrier> findByNameOrderByName(String name);
 }

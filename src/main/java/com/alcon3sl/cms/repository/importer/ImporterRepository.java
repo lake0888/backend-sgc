@@ -14,7 +14,7 @@ import java.util.List;
 public interface ImporterRepository extends JpaRepository<Importer, Long> {
 
     @Query(value = "SELECT * FROM importer i WHERE i.name ~* ?1", nativeQuery = true)
-    Page<Importer> findAllByName(String filter, PageRequest pageRequest);
+    List<Importer> findAllByName(String name);
 
     @Query(value = "SELECT * FROM importer i WHERE UPPER(i.name) = ?1", nativeQuery = true)
     List<Importer> findByName(String name);

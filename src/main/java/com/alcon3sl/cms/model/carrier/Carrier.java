@@ -20,10 +20,10 @@ public class Carrier {
     private String cif;
     @Convert(converter = KindCarrierConverter.class)
     private KindCarrier kindCarrier;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
     private ContactDetails contactDetails;
 

@@ -12,8 +12,9 @@ import java.util.List;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Long> {
-    @Query(value = "SELECT * FROM country c WHERE c.code ~* ?1 OR c.name ~* ?1", nativeQuery = true)
-    Page<Country> findAllByCodeOrName(String filter, PageRequest pageRequest);
+
+    @Query(value = "SELECT * FROM country c WHERE c.name ~* ?1", nativeQuery = true)
+    List<Country> findByName(String name);
 
     List<Country> findByCodeIgnoreCase(String code);
 
@@ -23,6 +24,5 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
     List<Country> findByPhoneCodeIgnoreCase(String phoneCode);
 
-    @Query(value = "SELECT * FROM country c WHERE c.name ~* ?1 ORDER BY c.name ASC", nativeQuery = true)
-    List<Country> findAllByName(String name);
+    List<Country> findByStateList_NotNull();
 }

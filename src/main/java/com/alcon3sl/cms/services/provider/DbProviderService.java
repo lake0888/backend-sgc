@@ -7,6 +7,7 @@ import com.alcon3sl.cms.exception.ProviderNotFoundException;
 import com.alcon3sl.cms.repository.provider.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +25,14 @@ public class DbProviderService implements ProviderService {
     }
 
     @Override
-    public Page<Provider> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return providerRepository.findAll(pageRequest);
-        return providerRepository.findAllByName(filter, pageRequest);
+    public Page<Provider> findAll(String name, PageRequest pageRequest) {
+        var providerList = providerRepository.findByName(name);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min(start + pageRequest.getPageSize(), providerList.size());
+
+        var subList = providerList.subList(start, end);
+        return new PageImpl<>(subList, pageRequest, providerList.size());
     }
 
     @Override
@@ -41,9 +46,9 @@ public class DbProviderService implements ProviderService {
         boolean flag = provider == null || provider.getName().isEmpty();
         if (flag)
             throw new ProviderNotFoundException("Wrong data");
-        if (!providerRepository.findByName(provider.getName().trim().toUpperCase()).isEmpty())
+        if (!providerRepository.findByNameIgnoreCase(provider.getName().trim().toUpperCase()).isEmpty())
             throw new ProviderNotFoundException("The name already exists");
-        if (!providerRepository.findByCif(provider.getCif().trim().toUpperCase()).isEmpty())
+        if (provider.getCif() != null && !providerRepository.findByCifIgnoreCase(provider.getCif().trim().toUpperCase()).isEmpty())
             throw new ProviderNotFoundException("The cif already exists");
         return providerRepository.save(provider);
     }
@@ -67,17 +72,18 @@ public class DbProviderService implements ProviderService {
                 provider.setName(name);
         }
 
-        String description = tempData.getDescription();
-        if (description != null && !Objects.equals(provider.getDescription(), description))
-            provider.setDescription(description);
-
         String cif = tempData.getCif();
         if (cif != null && !Objects.equals(provider.getCif(), cif)) {
-            if (!providerRepository.findByCif(cif.trim().toUpperCase()).isEmpty())
+            if (!providerRepository.findByCifIgnoreCase(cif.trim().toUpperCase()).isEmpty())
                 throw new ProviderNotFoundException("The cif already exists");
             else
                 provider.setCif(cif);
-        }
+        } else if (cif == null || cif.isEmpty())
+            provider.setCif(cif);
+
+        String description = tempData.getDescription();
+        if (description != null && !Objects.equals(provider.getDescription(), description))
+            provider.setDescription(description);
 
         Address address = tempData.getAddress();
         if (address != null && !Objects.equals(provider.getAddress(), address))
@@ -95,5 +101,10 @@ public class DbProviderService implements ProviderService {
         var providerList = providerRepository.findAllById(listId);
         providerRepository.deleteAllById(listId);
         return providerList;
+    }
+
+    @Override
+    public List<Provider> findByName(String name) {
+        return providerRepository.findByName(name);
     }
 }

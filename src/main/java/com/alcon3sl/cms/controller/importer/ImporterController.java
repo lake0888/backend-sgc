@@ -82,7 +82,7 @@ public class ImporterController {
         return new ResponseEntity<>(importerService.updateById(importerId, tempData), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "deleteAllByListId")
+    @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Importer>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {

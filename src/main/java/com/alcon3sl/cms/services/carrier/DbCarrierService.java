@@ -3,6 +3,7 @@ package com.alcon3sl.cms.services.carrier;
 import com.alcon3sl.cms.model.carrier.Carrier;
 import com.alcon3sl.cms.exception.CarrierNotFoundException;
 import com.alcon3sl.cms.model.carrier.KindCarrier;
+import com.alcon3sl.cms.model.util.address.Address;
 import com.alcon3sl.cms.model.util.contact_details.ContactDetails;
 import com.alcon3sl.cms.repository.carrier.CarrierRepository;
 import com.alcon3sl.cms.model.util.JUtil;
@@ -54,9 +55,9 @@ public class DbCarrierService implements CarrierService {
         boolean flag = carrier == null || carrier.getName().isEmpty();
         if (flag)
             throw new CarrierNotFoundException("Wrong data");
-        if (!carrierRepository.findByName(carrier.getName().trim().toUpperCase()).isEmpty())
+        if (!carrierRepository.findByNameIgnoreCase(carrier.getName().trim().toUpperCase()).isEmpty())
             throw new CarrierNotFoundException("The name already exists");
-        if (!carrierRepository.findByCif(carrier.getCif().trim().toUpperCase()).isEmpty())
+        if (carrier.getCif() != null && !carrierRepository.findByCifIgnoreCase(carrier.getCif().trim().toUpperCase()).isEmpty())
             throw new CarrierNotFoundException("The cif already exists");
 
         return carrierRepository.save(carrier);
@@ -75,30 +76,36 @@ public class DbCarrierService implements CarrierService {
 
         String name = tempData.getName();
         if (name != null && !name.isEmpty() && !Objects.equals(carrier.getName(), name)) {
-            if (!carrierRepository.findByName(name.trim().toUpperCase()).isEmpty())
+            if (!carrierRepository.findByNameIgnoreCase(name.trim().toUpperCase()).isEmpty())
                 throw new CarrierNotFoundException("The name already exists");
             else
                 carrier.setName(name);
         }
 
-        String description = tempData.getDescription();
-        if (description != null && !description.isEmpty() && !Objects.equals(carrier.getDescription(), description))
-            carrier.setDescription(description);
-
         String cif = tempData.getCif();
         if (cif != null && !cif.isEmpty() && !Objects.equals(carrier.getCif(), cif)) {
-            if (!carrierRepository.findByCif(cif.trim().toUpperCase()).isEmpty())
+            if (!carrierRepository.findByCifIgnoreCase(cif.trim().toUpperCase()).isEmpty())
                 throw new CarrierNotFoundException("The cif already exists");
             else
                 carrier.setCif(cif);
-        }
+        } else if (cif == null || cif.isEmpty())
+            carrier.setCif(cif);
 
         KindCarrier kindCarrier = tempData.getKindCarrier();
         if (kindCarrier != null && !Objects.equals(carrier.getKindCarrier(), kindCarrier))
             carrier.setKindCarrier(kindCarrier);
 
+        String description = tempData.getDescription();
+        if (description != null && !description.isEmpty() && !Objects.equals(carrier.getDescription(), description))
+            carrier.setDescription(description);
+
+
+        Address address = tempData.getAddress();
+        if (address != null && !Objects.equals(carrier.getAddress(), address))
+            carrier.setAddress(address);
+
         ContactDetails contactDetails = tempData.getContactDetails();
-        if (contactDetails != null && Objects.equals(carrier.getContactDetails(), contactDetails))
+        if (contactDetails != null && !Objects.equals(carrier.getContactDetails(), contactDetails))
             carrier.setContactDetails(contactDetails);
 
         return carrierRepository.save(carrier);
@@ -109,5 +116,10 @@ public class DbCarrierService implements CarrierService {
         var carrierList = carrierRepository.findAllById(listId);
         carrierRepository.deleteAllById(listId);
         return carrierList;
+    }
+
+    @Override
+    public List<Carrier> findByNameOrderByName(String name) {
+        return carrierRepository.findByNameOrderByName(name);
     }
 }

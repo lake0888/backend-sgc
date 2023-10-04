@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ProviderService {
-    Page<Provider> findAll(String filter, PageRequest pageRequest);
+    Page<Provider> findAll(String name, PageRequest pageRequest);
 
     Provider findById(Long providerId);
 
@@ -19,4 +19,6 @@ public interface ProviderService {
     Provider updateById(Long providerId, Provider tempData);
 
     List<Provider> deleteAllById(List<Long> listId);
+
+    List<Provider> findByName(String name);
 }

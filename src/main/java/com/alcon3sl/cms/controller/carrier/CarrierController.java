@@ -81,7 +81,7 @@ public class CarrierController {
         return new ResponseEntity<>(carrierService.updateById(carrierId, tempData), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "deleteAllByListId")
+    @DeleteMapping(path = "deleteAllById")
     public ResponseEntity<List<Carrier>> deleteAllById(
             @RequestParam Optional<List<Long>> listId
     ) {

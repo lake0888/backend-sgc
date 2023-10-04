@@ -72,11 +72,26 @@ public class CountryController {
         return new ResponseEntity<>(countryList, HttpStatus.OK);
     }
 
-    @GetMapping(path = "findAll/{name}")
+    @GetMapping(path = { "findAll/{name}", "findAll/"} )
     public ResponseEntity<List<Country>> findAllNyName(
-            @PathVariable(name = "name") String name
+            @PathVariable(name = "name") Optional<String> name
     ) {
-        var countryList = countryService.findAllByName(name);
+        var countryList = countryService.findAll(name.orElse(""));
+        if (countryList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(countryList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "count")
+    public ResponseEntity<Long> count() {
+        return new ResponseEntity<>(countryService.count(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "findByState_NotNull")
+    public ResponseEntity<List<Country>> findByState_NotNull(
+            @RequestParam(name = "name") Optional<String> name
+    ) {
+        var countryList = countryService.findByState_NotNull(name.orElse(""));
         if (countryList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countryList, HttpStatus.OK);

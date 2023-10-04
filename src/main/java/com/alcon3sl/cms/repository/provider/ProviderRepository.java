@@ -13,11 +13,9 @@ import java.util.List;
 @Repository
 public interface ProviderRepository extends JpaRepository<Provider, Long> {
     @Query(value = "SELECT * FROM provider p WHERE p.name ~* ?1", nativeQuery = true)
-    Page<Provider> findAllByName(String filter, PageRequest pageRequest);
-
-    @Query(value = "SELECT * FROM provider p WHERE UPPER(p.name) = ?1", nativeQuery = true)
     List<Provider> findByName(String name);
 
-    @Query(value = "SELECT * FROM provider p WHERE UPPER(p.cif) = ?1", nativeQuery = true)
-    List<Provider> findByCif(String cif);
+    List<Provider> findByNameIgnoreCase(String name);
+
+    List<Provider> findByCifIgnoreCase(String cif);
 }

@@ -52,7 +52,7 @@ public class ProviderController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Provider> save(
             @RequestPart(name = "provider") Provider provider,
-            @RequestPart(name = "imageFile")MultipartFile imageFile) throws IOException {
+            @RequestPart(name = "imageFile") MultipartFile imageFile) throws IOException {
         Image image = new Image(
                 imageFile.getOriginalFilename(),
                 imageFile.getContentType(),
@@ -83,7 +83,8 @@ public class ProviderController {
     }
 
     @DeleteMapping(path = "deleteAllById")
-    public ResponseEntity<List<Provider>> deleteAllById(List<Long> listId) {
+    public ResponseEntity<List<Provider>> deleteAllById(
+            @RequestParam(name = "listId")  List<Long> listId) {
         var providerList = providerService.deleteAllById(listId);
         if (providerList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

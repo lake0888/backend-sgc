@@ -1,10 +1,12 @@
 package com.alcon3sl.cms.services.util.country;
 
+import com.alcon3sl.cms.model.util.JUtil;
 import com.alcon3sl.cms.model.util.country.Country;
 import com.alcon3sl.cms.exception.CountryNotFoundException;
 import com.alcon3sl.cms.repository.util.country.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +25,18 @@ public class DbCountryService implements CountryService {
     }
 
     @Override
-    public Page<Country> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return countryRepository.findAll(pageRequest);
-        return countryRepository.findAllByCodeOrName(filter, pageRequest);
+    public List<Country> findAll(String name) {
+        return countryRepository.findByName(name);
+    }
+
+    public Page<Country> findAll(String name, PageRequest pageRequest) {
+        var countryList = this.findAll(name);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min(start + pageRequest.getPageSize(), countryList.size());
+
+        var subList = countryList.subList(start, end);
+        return new PageImpl<>(subList, pageRequest, countryList.size());
     }
 
     @Override
@@ -105,7 +115,21 @@ public class DbCountryService implements CountryService {
     }
 
     @Override
-    public List<Country> findAllByName(String name) {
-        return countryRepository.findAllByName(name);
+    public Long count() {
+        return countryRepository.count();
     }
+
+    @Override
+    public List<Country> findByState_NotNull(String name) {
+        var countryList = this.findByState_NotNull();
+        if (!countryList.isEmpty())
+            countryList = JUtil.refineList(countryList, this.findAll(name));
+        return countryList;
+    }
+
+    private List<Country> findByState_NotNull() {
+        return countryRepository.findByStateList_NotNull();
+    }
+
+
 }

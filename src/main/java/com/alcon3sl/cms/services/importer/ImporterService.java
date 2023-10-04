@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ImporterService {
-    Page<Importer> findAll(String filter, PageRequest pageRequest);
+    List<Importer> findAll(String name);
 
     Importer findById(Long importerId);
 
@@ -19,4 +19,6 @@ public interface ImporterService {
     Importer updateById(Long importerId, Importer tempData);
 
     List<Importer> deleteAllById(List<Long> listId);
+
+    //List<Importer> findByName_NotNull();
 }

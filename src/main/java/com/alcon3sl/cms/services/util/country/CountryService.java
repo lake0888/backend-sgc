@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface CountryService {
-    Page<Country> findAll(String filter, PageRequest pageRequest);
+    List<Country> findAll(String name);
 
     Country findById(Long countryId);
 
@@ -20,5 +20,7 @@ public interface CountryService {
 
     List<Country> deleteAllById(List<Long> listId);
 
-    List<Country> findAllByName(String name);
+    Long count();
+
+    List<Country> findByState_NotNull(String name);
 }

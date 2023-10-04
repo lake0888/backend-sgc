@@ -106,12 +106,12 @@ public class DbSpecialtyService implements SpecialtyService{
     @Override
     public List<Specialty> findByFamily_NotNull(String name) {
         var specialtyList = this.findByFamily_NotNull();
-        if (!name.isEmpty())
+        if (!specialtyList.isEmpty())
             specialtyList = JUtil.refineList(specialtyList, this.findAll(name));
         return specialtyList;
     }
 
-    public List<Specialty> findByFamily_NotNull() {
+    private List<Specialty> findByFamily_NotNull() {
         return specialtyRepository.findByFamilies_NotNull();
     }
 }

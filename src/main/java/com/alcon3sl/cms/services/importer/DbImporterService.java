@@ -6,6 +6,7 @@ import com.alcon3sl.cms.model.importer.Importer;
 import com.alcon3sl.cms.exception.ImporterNotFoundException;
 import com.alcon3sl.cms.repository.importer.ImporterRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,17 @@ public class DbImporterService implements ImporterService {
     }
 
     @Override
-    public Page<Importer> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return importerRepository.findAll(pageRequest);
-        return importerRepository.findAllByName(filter, pageRequest);
+    public List<Importer> findAll(String name) {
+        return importerRepository.findAllByName(name);
+    }
+    public Page<Importer> findAll(String name, PageRequest pageRequest) {
+        var importerList = this.findAll(name);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min(start + pageRequest.getPageSize(), importerList.size());
+
+        var subList = importerList.subList(start, end);
+        return new PageImpl<>(subList, pageRequest, importerList.size());
     }
 
     @Override
@@ -40,7 +48,7 @@ public class DbImporterService implements ImporterService {
             throw new ImporterNotFoundException("Wrong data");
         if (!importerRepository.findByName(importer.getName().trim().toUpperCase()).isEmpty())
             throw new ImporterNotFoundException("The name already exists");
-        if (!importer.getNit().isEmpty() && !importerRepository.findByNit(importer.getNit().trim().toUpperCase()).isEmpty())
+        if (importer.getNit() != null && !importer.getNit().isEmpty() && !importerRepository.findByNit(importer.getNit().trim().toUpperCase()).isEmpty())
             throw new ImporterNotFoundException("The nit already exists");
         return importerRepository.save(importer);
     }
@@ -73,6 +81,10 @@ public class DbImporterService implements ImporterService {
         } else if (nit == null || nit.isEmpty()) {
                 importer.setNit(nit);
         }
+
+        String description = tempData.getDescription();
+        if (description != null && !description.isEmpty() && !Objects.equals(importer.getDescription(), description))
+            importer.setDescription(description);
 
         Address address = tempData.getAddress();
         if (address != null && !Objects.equals(importer.getAddress(), address))
