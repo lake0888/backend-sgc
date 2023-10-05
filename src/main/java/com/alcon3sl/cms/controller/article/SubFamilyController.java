@@ -49,9 +49,7 @@ public class SubFamilyController {
     }
 
     @GetMapping(path = "{subfamilyId}")
-    public ResponseEntity<SubFamily> findById(
-            @PathVariable(name = "subfamilyId") Long subfamilyId
-    ) {
+    public ResponseEntity<SubFamily> findById(@PathVariable(name = "subfamilyId") Long subfamilyId) {
         return new ResponseEntity<>(subFamilyService.findById(subfamilyId), HttpStatus.OK);
     }
 

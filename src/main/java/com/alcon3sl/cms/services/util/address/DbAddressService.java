@@ -34,7 +34,7 @@ public class DbAddressService implements AddressService {
     public Address save(Address address) {
         boolean flag = address == null || address.getCountryState() == null || address.getCountryState().getName().isEmpty();
         if (flag)
-            throw new AddressNotFoundException("Wrong data");
+            throw new IllegalStateException("Wrong data");
         return addressRepository.save(address);
     }
 
