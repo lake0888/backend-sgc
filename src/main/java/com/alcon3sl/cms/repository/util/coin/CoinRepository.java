@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CoinRepository extends JpaRepository<Coin, Long> {
-    @Query(value = "SELECT * FROM coin c WHERE c.name ~* ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM coin c WHERE c.name ~* ?1 OR c.code ~* ?1", nativeQuery = true)
     List<Coin> findAll(String name);
 
     List<Coin> findByCodeIgnoreCase(String code);

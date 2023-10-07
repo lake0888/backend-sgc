@@ -60,7 +60,7 @@ public class DbBankAccountService implements BankAccountService {
             throw new IllegalStateException("Wrong data");
         else if (account.getNumber() != null && !bankAccountRepository.findByNumberIgnoreCase(account.getNumber().trim().toUpperCase()).isEmpty())
             throw new IllegalArgumentException("The account number already exists");
-        else if (account.getIban() != null && !bankAccountRepository.findByIbanIgnoreCase(account.getIban().trim().toUpperCase()).isEmpty())
+        else if (account.getIban() != null && !account.getIban().isEmpty() && !bankAccountRepository.findByIbanIgnoreCase(account.getIban().trim().toUpperCase()).isEmpty())
             throw new IllegalArgumentException("The iban number already exists");
         return bankAccountRepository.save(account);
     }

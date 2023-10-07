@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BankRepository extends JpaRepository<Bank, Long> {
-    @Query(value = "SELECT * FROM bank b WHERE b.name ~* ?1 OR b.code ~* ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM bank b WHERE b.name ~* ?1 OR b.code ~* ?1 ORDER BY b.name ASC", nativeQuery = true)
     List<Bank> findAll(String filter);
 
     List<Bank> findByCodeIgnoreCase(String code);

@@ -91,4 +91,14 @@ public class BankController {
         return new ResponseEntity<>(bankList, HttpStatus.OK);
     }
 
+    @GetMapping(path = "findAll")
+    public ResponseEntity<List<Bank>> deleteAllById(
+            @RequestParam(name = "filter") Optional<String> filter
+    ) {
+        var bankList = bankService.findAll(filter.orElse(""));
+        if (bankList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(bankList, HttpStatus.OK);
+    }
+
 }

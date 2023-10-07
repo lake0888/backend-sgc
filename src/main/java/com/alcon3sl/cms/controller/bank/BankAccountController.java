@@ -45,7 +45,7 @@ public class BankAccountController {
     }
 
     @PostMapping
-    public ResponseEntity<BankAccount> save(@RequestPart BankAccount account) {
+    public ResponseEntity<BankAccount> save(@RequestPart(name = "account") BankAccount account) {
         return new ResponseEntity<>(bankAccountService.save(account), HttpStatus.CREATED);
     }
 
@@ -57,7 +57,7 @@ public class BankAccountController {
     @PutMapping(path = "{accountId}")
     public ResponseEntity<BankAccount> updateById(
             @PathVariable(name = "accountId") Long accountId,
-            @RequestPart BankAccount tempData
+            @RequestPart(name = "account") BankAccount tempData
     ) {
         return new ResponseEntity<>(bankAccountService.updateById(accountId, tempData), HttpStatus.OK);
     }

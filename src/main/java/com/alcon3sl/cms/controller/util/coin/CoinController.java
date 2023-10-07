@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +69,16 @@ public class CoinController {
             @RequestParam(name = "listId") List<Long> listId
     ) {
         var coinList = coinService.deleteAllById(listId);
+        if (coinList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(coinList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "findAll")
+    public ResponseEntity<List<Coin>> findAll(
+            @RequestParam(name = "name") Optional<String> name
+    ) {
+        var coinList = coinService.findAll(name.orElse(""));
         if (coinList.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(coinList, HttpStatus.OK);

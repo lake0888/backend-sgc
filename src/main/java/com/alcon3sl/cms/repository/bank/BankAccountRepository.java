@@ -15,7 +15,8 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
             "FROM bank_account ba " +
             "LEFT JOIN coin c ON (ba.coin_id = c.id) " +
             "LEFT JOIN bank b ON (ba.bank_id = b.id) " +
-            "WHERE ba.number ~* ?1 OR c.code ~* ?1 OR b.code ~* ?1", nativeQuery = true)
+            "WHERE ba.number ~* ?1 OR c.code ~* ?1 OR b.code ~* ?1 " +
+            "ORDER BY b.code ASC, c.code ASC, ba.number ASC", nativeQuery = true)
     List<BankAccount> findAll(String filter);
 
     List<BankAccount> findByNumberIgnoreCase(String number);

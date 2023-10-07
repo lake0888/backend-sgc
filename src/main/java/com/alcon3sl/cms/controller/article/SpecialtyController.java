@@ -97,9 +97,9 @@ public class SpecialtyController {
         return new ResponseEntity<>(specialtyList, HttpStatus.OK);
     }
 
-    @GetMapping(path = {"findAll/{name}", "findAll/"})
+    @GetMapping(path = "findAll")
     public ResponseEntity<List<Specialty>> findAll(
-            @PathVariable(name = "name") Optional<String> name
+            @RequestParam(name = "name") Optional<String> name
     ){
         var specialtyList = specialtyService.findAll(name.orElse(""));
         return new ResponseEntity<>(specialtyList, HttpStatus.OK);
