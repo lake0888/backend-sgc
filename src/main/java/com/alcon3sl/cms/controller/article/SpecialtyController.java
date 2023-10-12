@@ -7,6 +7,7 @@ import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,23 +29,22 @@ public class SpecialtyController {
     public SpecialtyController(DbSpecialtyService specialtyService) {
         this.specialtyService = specialtyService;
     }
+
     @GetMapping
     public ResponseEntity<Page<Specialty>> findAll(
             @RequestParam Optional<String> name,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var specialties = specialtyService.convertToPage(name.orElse(""),
+            Pageable pageable
+    ) {
+        Page<Specialty> page = specialtyService.findAll(name.orElse(""),
                 PageRequest.of(
-                        page.orElse(0),
-                        size.orElse(50),
-                        Sort.Direction.ASC, sortBy.orElse("name")
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
                 )
         );
-        if (specialties.isEmpty())
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(specialties, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{specialtyId}")

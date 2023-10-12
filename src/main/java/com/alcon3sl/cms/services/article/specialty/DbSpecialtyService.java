@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -25,19 +27,8 @@ public class DbSpecialtyService implements SpecialtyService{
     }
 
     @Override
-    public List<Specialty> findAll(String name) {
-        return specialtyRepository.findAll(name)
-                .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found"));
-    }
-
-    public Page<Specialty> convertToPage(String name, PageRequest pageRequest) {
-        var specialtyList = this.findAll(name);
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min(start + pageRequest.getPageSize(), specialtyList.size());
-
-        var subList = specialtyList.subList(start, end);
-        return new PageImpl<>(subList, pageRequest, specialtyList.size());
+    public Page<Specialty>  findAll(String name, Pageable pageable) {
+        return specialtyRepository.findAll(name, pageable);
     }
 
     @Override
@@ -113,5 +104,9 @@ public class DbSpecialtyService implements SpecialtyService{
 
     private List<Specialty> findByFamily_NotNull() {
         return specialtyRepository.findByFamilies_NotNull();
+    }
+
+    public List<Specialty> findAll(String name) {
+        return specialtyRepository.findAll(name);
     }
 }
