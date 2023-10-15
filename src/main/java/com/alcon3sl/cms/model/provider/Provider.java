@@ -18,6 +18,7 @@ public class Provider {
     private String cif;
     private boolean isMaker;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")

@@ -2,6 +2,7 @@ package com.alcon3sl.cms.services.article.manufacturer;
 
 import com.alcon3sl.cms.model.article.manufacturer.Manufacturer;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

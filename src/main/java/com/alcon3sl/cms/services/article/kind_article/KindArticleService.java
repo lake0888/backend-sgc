@@ -2,7 +2,9 @@ package com.alcon3sl.cms.services.article.kind_article;
 
 import com.alcon3sl.cms.model.article.kind_article.KindArticle;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
