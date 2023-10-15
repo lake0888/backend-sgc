@@ -16,6 +16,7 @@ public class Provider {
     private String name;
     private String description;
     private String cif;
+    private boolean isMaker;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -23,18 +24,19 @@ public class Provider {
     private ContactDetails contactDetails;
 
     public Provider() {
-        this("", "", "", new Address(), new ContactDetails());
+        this("", "", "", false, new Address(), new ContactDetails());
     }
 
-    public Provider(String name, String description, String cif, Address address, ContactDetails contactDetails) {
-        this(0L, name, description, cif, address, contactDetails);
+    public Provider(String name, String description, String cif, boolean isMaker, Address address, ContactDetails contactDetails) {
+        this(0L, name, description, cif, isMaker, address, contactDetails);
     }
 
-    public Provider(Long id, String name, String description, String cif, Address address, ContactDetails contactDetails) {
+    public Provider(Long id, String name, String description, String cif, boolean isMaker, Address address, ContactDetails contactDetails) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.cif = cif;
+        this.isMaker = isMaker;
         this.address = address;
         this.contactDetails = contactDetails;
     }
@@ -71,6 +73,14 @@ public class Provider {
         this.cif = cif;
     }
 
+    public boolean isMaker() {
+        return isMaker;
+    }
+
+    public void setMaker(boolean maker) {
+        isMaker = maker;
+    }
+
     public Address getAddress() {
         return address;
     }
@@ -94,12 +104,13 @@ public class Provider {
         Provider provider = (Provider) o;
         return Objects.equals(id, provider.id) && Objects.equals(name, provider.name) &&
                 Objects.equals(description, provider.description) && Objects.equals(cif, provider.cif) &&
-                Objects.equals(address, provider.address) && Objects.equals(contactDetails, provider.contactDetails);
+                Objects.equals(isMaker, provider.isMaker) && Objects.equals(address, provider.address) &&
+                Objects.equals(contactDetails, provider.contactDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, cif, contactDetails);
+        return Objects.hash(id, name, description, cif, isMaker, address, contactDetails);
     }
 
     @Override
@@ -109,6 +120,7 @@ public class Provider {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cif='" + cif + '\'' +
+                ", isMaker='" + isMaker + '\'' +
                 ", address='" + address + '\'' +
                 ", contactDetails=" + contactDetails +
                 '}';

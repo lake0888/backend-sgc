@@ -28,9 +28,6 @@ public class DbSubFamilyService implements SubFamilyService {
 
     @Override
     public Page<SubFamily> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return subFamilyRepository.findAll(pageRequest);
-
         List<SubFamily> subFamilyList = new ArrayList<>();
         String[] filters = filter.replaceAll("\s+", " ").split(" ");
         for (String current : filters) {

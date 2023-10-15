@@ -31,11 +31,9 @@ public class SpecialtyController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Specialty>> findAll(
-            @RequestParam Optional<String> name,
-            Pageable pageable
-    ) {
-        Page<Specialty> page = specialtyService.findAll(name.orElse(""),
+    public ResponseEntity<Page<Specialty>> findAll(@RequestParam Optional<String> name, Pageable pageable) {
+        Page<Specialty> page = specialtyService.findAll(
+                name.orElse(""),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),

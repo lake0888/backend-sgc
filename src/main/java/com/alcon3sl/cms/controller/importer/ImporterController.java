@@ -6,6 +6,7 @@ import com.alcon3sl.cms.services.importer.DbImporterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,19 +30,18 @@ public class ImporterController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Importer>> findAll(
-            @RequestParam Optional<String> filter,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var importerList = importerService.findAll(filter.orElse(""), PageRequest.of(
-                page.orElse(0),
-                size.orElse(50),
-                Sort.Direction.ASC, sortBy.orElse("name")));
-        if (importerList.isEmpty())
+    public ResponseEntity<Page<Importer>> findAll(@RequestParam Optional<String> filter, Pageable pageable) {
+        var page = importerService.findAll(
+                filter.orElse(""),
+                PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
+                )
+        );
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(importerList, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{importerId}")

@@ -5,6 +5,7 @@ import com.alcon3sl.cms.services.bank.DbBankAccountService;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +24,17 @@ public class BankAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<BankAccount>> findAll(
-            @RequestParam Optional<String> filter,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var accountList = bankAccountService.findAll(filter.orElse(""), PageRequest.of(
-                page.orElse(0),
-                size.orElse(10),
-                Sort.Direction.ASC, sortBy.orElse("number")
+    public ResponseEntity<Page<BankAccount>> findAll(@RequestParam Optional<String> filter, Pageable pageable) {
+        var page = bankAccountService.findAll(
+                filter.orElse(""),
+                PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC, "number"))
         ));
-        if (accountList.isEmpty())
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(accountList, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{accountId}")

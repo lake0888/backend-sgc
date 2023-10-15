@@ -5,6 +5,7 @@ import com.alcon3sl.cms.services.util.coin.DbCoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
@@ -25,20 +26,18 @@ public class CoinController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Coin>> findAll(
-            @RequestParam Optional<String> name,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var coinList = coinService.findAll(name.orElse(""), PageRequest.of(
-                page.orElse(0),
-                size.orElse(10),
-                Sort.Direction.ASC, sortBy.orElse("name")
-        ));
-        if (coinList.isEmpty())
+    public ResponseEntity<Page<Coin>> findAll(@RequestParam Optional<String> name, Pageable pageable) {
+        var page = coinService.findAll(
+                name.orElse(""),
+                PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
+            )
+        );
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(coinList, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{coinId}")

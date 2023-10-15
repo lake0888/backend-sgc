@@ -26,9 +26,6 @@ public class DbCountryStateService implements CountryStateService {
 
     @Override
     public Page<CountryState> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return countryStateRepository.findAll(pageRequest);
-
         List<CountryState> countryStateList = new ArrayList<>();
         String[] filters = filter.replaceAll("\s+", " ").split(" ");
 

@@ -5,6 +5,7 @@ import com.alcon3sl.cms.services.util.country_state.DbCountryStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +24,18 @@ public class CountryStateController {
         this.countryStateService = countryStateService;
     }
     @GetMapping
-    public ResponseEntity<Page<CountryState>> findAll(
-            @RequestParam Optional<String> filter,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var countryStateList = countryStateService.findAll(filter.orElse(""),
+    public ResponseEntity<Page<CountryState>> findAll(@RequestParam Optional<String> filter, Pageable pageable) {
+        var page = countryStateService.findAll(
+                filter.orElse(""),
                 PageRequest.of(
-                        page.orElse(0),
-                        size.orElse(50),
-                        Sort.Direction.ASC, sortBy.orElse("name")));
-        if (countryStateList.isEmpty())
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
+                )
+        );
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(countryStateList, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{countryStateId}")

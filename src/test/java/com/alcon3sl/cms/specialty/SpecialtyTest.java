@@ -32,13 +32,13 @@ public class SpecialtyTest {
     }
 
     @Test
-    public void shouldReturnASpecialtyWithAnUnknownId() {
+    public void shouldReturnASpecialtyNotFoundExceptionWithAnUnknownId() {
         ResponseEntity<String> response = restTemplate.getForEntity("/specialty/1", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        Number status = documentContext.read("$.status");
-        assertThat(status).isEqualTo(500);
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Specialty not found");
     }
 
     @Test

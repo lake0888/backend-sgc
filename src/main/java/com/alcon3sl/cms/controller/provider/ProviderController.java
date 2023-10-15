@@ -6,6 +6,7 @@ import com.alcon3sl.cms.services.provider.DbProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,20 +29,18 @@ public class ProviderController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Provider>> findAll(
-            @RequestParam Optional<String> filter,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
-            ) {
-        var providerList = providerService.findAll(filter.orElse(""), PageRequest.of(
-                page.orElse(0),
-                size.orElse(50),
-                Sort.Direction.ASC, sortBy.orElse("name")
-        ));
-        if (providerList.isEmpty())
+    public ResponseEntity<Page<Provider>> findAll(@RequestParam Optional<String> filter, Pageable pageable) {
+        var page = providerService.findAll(
+                filter.orElse(""),
+                PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
+                )
+        );
+        if (page.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(providerList, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(path = "{providerId}")

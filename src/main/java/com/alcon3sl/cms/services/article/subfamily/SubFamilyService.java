@@ -9,14 +9,9 @@ import java.util.List;
 
 public interface SubFamilyService {
     Page<SubFamily> findAll(String filter, PageRequest pageRequest);
-
     SubFamily findById(Long subfamilyId);
-
     SubFamily save(SubFamily subfamily);
-
     SubFamily deleteById(Long subfamilyId);
-
     SubFamily updateById(Long subfamilyId, SubFamily tempData);
-
     List<SubFamily> deleteAllById(List<Long> listId);
 }

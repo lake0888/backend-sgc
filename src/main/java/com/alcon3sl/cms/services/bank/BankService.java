@@ -8,16 +8,10 @@ import java.util.List;
 
 public interface BankService {
     List<Bank> findAll(String name);
-
     Page<Bank> findAll(String name, PageRequest pageRequest);
-
     Bank findById(Long bankId);
-
     Bank save(Bank bank);
-
     Bank deleteById(Long bankId);
-
     Bank updateById(Long bankId, Bank tempData);
-
     List<Bank> deleteAllById(List<Long> listId);
 }

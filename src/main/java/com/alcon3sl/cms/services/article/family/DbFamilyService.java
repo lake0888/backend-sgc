@@ -23,9 +23,6 @@ public class DbFamilyService implements FamilyService {
 
     @Override
     public Page<Family> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return familyRepository.findAll(pageRequest);
-
         List<Family> familyList = new ArrayList<>();
         String[] filters = filter.replaceAll("\s+", " ").split(" ");
 

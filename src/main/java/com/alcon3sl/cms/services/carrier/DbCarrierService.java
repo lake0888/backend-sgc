@@ -28,8 +28,6 @@ public class DbCarrierService implements CarrierService {
 
     @Override
     public Page<Carrier> findAll(String filter, PageRequest pageRequest) {
-        if (filter.isEmpty())
-            return carrierRepository.findAll(pageRequest);
         String[] filters = filter.replaceAll("\s+", " ").split(" ");
         List<Carrier> carrierList = new ArrayList<>();
         for (String current : filters) {
