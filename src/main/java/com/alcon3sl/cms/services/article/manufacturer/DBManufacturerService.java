@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,19 +31,24 @@ public class DBManufacturerService implements ManufacturerService {
 
     @Override
     public Manufacturer findById(Long manufacturerId) {
-        return manufacturerRepository.findById(manufacturerId)
+        return manufacturerRepository
+                .findById(manufacturerId)
                 .orElseThrow(() -> new ManufacturerNotFoundException("Manufacturer not found"));
     }
 
     @Override
-    public Manufacturer save(Manufacturer manufacturer) {
-        boolean flag = (manufacturer == null || manufacturer.getName().isEmpty());
+    public URI save(Manufacturer newManufacturer, UriComponentsBuilder ucb) {
+        boolean flag = (newManufacturer == null || newManufacturer.getName().isEmpty());
         if (flag)
             throw new IllegalArgumentException("Wrong data");
-        else if (!manufacturerRepository.findByNameIgnoreCase(manufacturer.getName()).isEmpty())
+        else if (!manufacturerRepository.findByNameIgnoreCase(newManufacturer.getName()).isEmpty())
             throw new IllegalArgumentException("The name already exists");
 
-        return manufacturerRepository.save(manufacturer);
+        var manufacturer = manufacturerRepository.save(newManufacturer);
+        return ucb
+                .path("manufacturer/{id}")
+                .buildAndExpand(manufacturer.getId())
+                .toUri();
     }
 
     @Override

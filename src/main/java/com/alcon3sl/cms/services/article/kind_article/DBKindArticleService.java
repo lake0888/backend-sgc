@@ -9,9 +9,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DBKindArticleService implements KindArticleService {
@@ -30,24 +33,29 @@ public class DBKindArticleService implements KindArticleService {
 
     @Override
     public KindArticle findById(Long kindArticleId) {
-        return kindArticleRepository.findById(kindArticleId)
+        return kindArticleRepository
+                .findById(kindArticleId)
                 .orElseThrow(() -> new KindArticleNotFoundException("Kind article not found"));
     }
 
     @Override
-    public KindArticle save(KindArticle kindArticle) {
-        boolean flag = (kindArticle == null || kindArticle.getName().isEmpty());
+    public URI save(KindArticle newKindArticle, UriComponentsBuilder ucb) {
+        boolean flag = (newKindArticle == null || newKindArticle.getName().isEmpty());
         if (flag)
             throw new IllegalArgumentException("Wrong data");
-        else if (!kindArticleRepository.findByNameIgnoreCase(kindArticle.getName()).isEmpty())
+        else if (!kindArticleRepository.findByNameIgnoreCase(newKindArticle.getName()).isEmpty())
             throw new IllegalArgumentException("The name already exists");
 
-        return kindArticleRepository.save(kindArticle);
+        var kindArticle = kindArticleRepository.save(newKindArticle);
+        return ucb
+                .path("kind_article/{id}")
+                .buildAndExpand(kindArticle.getId())
+                .toUri();
     }
 
     @Override
     public KindArticle deleteById(Long kindArticleId) {
-        KindArticle kindArticle = this.findById(kindArticleId);
+        var kindArticle = this.findById(kindArticleId);
         kindArticleRepository.deleteById(kindArticleId);
         return kindArticle;
     }

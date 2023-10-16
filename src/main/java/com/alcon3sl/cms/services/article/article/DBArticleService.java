@@ -15,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,12 +56,16 @@ public class DBArticleService implements ArticleService {
     }
 
     @Override
-    public Article save(Article article) {
-        boolean flag = (article == null || article.getName().isEmpty() ||  article.getProvider() == null);
+    public URI save(Article newArticle, UriComponentsBuilder ucb) {
+        boolean flag = (newArticle == null || newArticle.getName().isEmpty() ||  newArticle.getProvider() == null);
         if (flag)
             throw new IllegalArgumentException("Wrong data");
 
-        return articleRepository.save(article);
+        var article = articleRepository.save(newArticle);
+        return ucb
+                .path("article/{id}")
+                .buildAndExpand(article.getId())
+                .toUri();
     }
 
     @Override

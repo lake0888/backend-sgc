@@ -1,6 +1,6 @@
 package com.alcon3sl.cms.article;
 
-import com.alcon3sl.cms.model.article.article.Article;
+import com.alcon3sl.cms.model.article.manufacturer.Manufacturer;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -18,103 +18,92 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleTest {
+public class ManufacturerTest {
     @Autowired
     TestRestTemplate restTemplate;
 
     @Test
-    void shouldReturnAllArticleWhenListIsRequested() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/article", String.class);
+    void shouldReturnAllManufacturerWhenListIsRequested() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/manufacturer", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    void shouldReturnAnArticleWhenDataIsSaved() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/article/1", String.class);
+    void shouldReturnAManufacturerWhenDataIsSaved() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/manufacturer/1", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         Number id = documentContext.read("$.id");
         String name = documentContext.read("$.name");
-        Double initialCost = documentContext.read("$.initialCost");
 
         assertThat(id).isEqualTo(1);
-        assertThat(name).isEqualTo("test");
-        assertThat(initialCost).isEqualTo(200.00);
+        assertThat(name).isEqualTo("Genebre");
     }
 
     @Test
-    void shouldReturnAnArticleNotFoundWithUnknownId() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/article/0", String.class);
+    void shouldReturnAManufacturerNotFoundWithUnknownId() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/manufacturer/0", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DirtiesContext
-    void shouldCreateANewArticle() {
-        Article article = new Article();
-        article.setName("article");
-        article.setInitialCost(200.00);
-        ResponseEntity<Void> createResponse = restTemplate.postForEntity("/article", article, Void.class);
+    void shouldCreateANewManufacturer() {
+        Manufacturer manufacturer = new Manufacturer("test", null);
+        ResponseEntity<Void> createResponse = restTemplate.postForEntity("/manufacturer", manufacturer, Void.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         URI newLocation = createResponse.getHeaders().getLocation();
         ResponseEntity<String> response = restTemplate.getForEntity(newLocation, String.class);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        Number id = documentContext.read("$.id");
-        String name = documentContext.read("$.name");
-        Double initialCost = documentContext.read("$.initialCost");
-
-        assertThat(id).isNotNull();
-        assertThat(name).isEqualTo("article");
-        assertThat(initialCost).isEqualTo(200.00);
-    }
-
-    @Test
-    void shouldDeleteAnExistingArticle() {
-        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
-                "/article/1", HttpMethod.DELETE, null, Void.class
-        );
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/article/1", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    @DirtiesContext
-    void shouldUpdateAnExistingArticle() {
-        Article article = new Article();
-        article.setName("New article");
-        article.setInitialCost(100.00);
-        HttpEntity<Article> httpEntity = new HttpEntity<>(article);
-        ResponseEntity<Void> updateResponse = restTemplate.exchange(
-                "/article/1", HttpMethod.PUT, httpEntity, Void.class
-        );
-        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/article/1", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         Number id = documentContext.read("$.id");
         String name = documentContext.read("$.name");
-        Double initialCost = documentContext.read("$.initialCost");
 
-        assertThat(id).isEqualTo(1);
-        assertThat(name).isEqualTo("New article");
-        assertThat(initialCost).isEqualTo(100.00);
+        assertThat(id).isNotNull();
+        assertThat(name).isEqualTo("test");
     }
 
     @Test
-    void shouldNotUpdateAnArticleThatDoesNotExist() {
-        Article article = new Article();
-        article.setName("New article");
-        article.setInitialCost(100.00);
-        HttpEntity<Article> httpEntity = new HttpEntity<>(article);
+    void shouldDeleteAnExistingManufacturer() {
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
+                "/manufacturer/1", HttpMethod.DELETE, null, Void.class
+        );
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/manufacturer/1", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldUpdateAnExistingManufacturer() {
+        Manufacturer manufacturer = new Manufacturer("new_test", null);
+        HttpEntity<Manufacturer> httpEntity = new HttpEntity<>(manufacturer);
         ResponseEntity<Void> updateResponse = restTemplate.exchange(
-                "/article/0", HttpMethod.PUT, httpEntity, Void.class
+                "/manufacturer/1", HttpMethod.PUT, httpEntity, Void.class
+        );
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/manufacturer/1", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Number id = documentContext.read("$.id");
+        String name = documentContext.read("$.name");
+
+        assertThat(id).isEqualTo(1);
+        assertThat(name).isEqualTo("new_test");
+    }
+
+    @Test
+    void shouldNotUpdateAManufacturerThatDoesNotExist() {
+        Manufacturer manufacturer = new Manufacturer("new_test", null);
+        HttpEntity<Manufacturer> httpEntity = new HttpEntity<>(manufacturer);
+        ResponseEntity<Void> updateResponse = restTemplate.exchange(
+                "/manufacturer/0", HttpMethod.PUT, httpEntity, Void.class
         );
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

@@ -4,7 +4,9 @@ import com.alcon3sl.cms.model.article.manufacturer.Manufacturer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 public interface ManufacturerService {
@@ -12,7 +14,7 @@ public interface ManufacturerService {
 
     Manufacturer findById(Long manufacturerId);
 
-    Manufacturer save(Manufacturer manufacturer);
+    URI save(Manufacturer manufacturer, UriComponentsBuilder ucb);
 
     Manufacturer deleteById(Long manufacturerId);
 
